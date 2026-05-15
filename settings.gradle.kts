@@ -11,4 +11,4 @@ plugins {
 }
 
 rootProject.name = "menu-manager"
-include("menu-manager")
+include("lib")

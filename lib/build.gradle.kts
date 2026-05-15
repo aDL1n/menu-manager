@@ -12,9 +12,12 @@ plugins {
     // Apply the java-library plugin for API and implementation separation.
     `java-library`
 
+    id("application")
+
+    id("com.gradleup.shadow") version "9.3.1"
+
     id("com.vanniktech.maven.publish") version "0.36.0"
 
-    id("application")
 }
 
 repositories {
@@ -32,19 +35,25 @@ dependencies {
     // This dependency is used internally, and not exposed to consumers on their own compile classpath.
     implementation(libs.guava)
 
-    implementation("com.googlecode.lanterna:lanterna:3.1.3")
-
-    implementation("org.jline:jline:4.0.4")
+    // Rendering Pipeline
+    implementation("io.github.bfur64:tetrue-terminal:1.2.2")
 }
 
 // Apply a specific Java toolchain to ease working on different environments.
 java {
     toolchain {
-        languageVersion = JavaLanguageVersion.of(25)
+        languageVersion = JavaLanguageVersion.of(21)
     }
 }
 
+application {
+    mainClass ="examples.TypeTest";
+}
+
 mavenPublishing {
+//    publishToMavenCentral()
+//    signAllPublications()
+
     coordinates(group.toString(), "menu-manager", version.toString())
 
     pom {
@@ -72,12 +81,4 @@ mavenPublishing {
             developerConnection.set("scm:git:ssh://git@github.com/BFUR64/menu-manager.git")
         }
     }
-}
-
-application {
-    mainClass = "examples.TypeTest"
-
-    applicationDefaultJvmArgs = listOf(
-        "--enable-native-access=ALL-UNNAMED"
-    )
 }

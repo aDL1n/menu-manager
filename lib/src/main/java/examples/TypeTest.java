@@ -44,7 +44,7 @@ public class TypeTest {
                 print = "UNKNOWN";
             }
             else if (hit.isCharacter()) {
-                print = String.valueOf(hit.character());
+//                print = String.valueOf(hit.character());
             }
 
             terminal.writer().println(print);
