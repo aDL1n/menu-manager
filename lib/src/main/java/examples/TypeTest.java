@@ -8,7 +8,6 @@ import org.jline.utils.InfoCmp;
 import org.jline.utils.NonBlockingReader;
 
 import java.io.IOException;
-import java.util.concurrent.TimeUnit;
 
 public class TypeTest {
     public static void main(String[] args) throws IOException {
