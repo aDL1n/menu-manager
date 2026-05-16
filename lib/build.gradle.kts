@@ -6,7 +6,7 @@
  */
 
 group = "io.github.bfur64"
-version = "0.1.0-alpha"
+version = "0.2.0"
 
 plugins {
     // Apply the java-library plugin for API and implementation separation.
@@ -37,7 +37,7 @@ dependencies {
     implementation(libs.guava)
 
     // Rendering Pipeline
-    implementation("io.github.bfur64:tetrue-terminal:1.2.3-SNAPSHOT")
+    implementation("io.github.bfur64:tetrue-terminal:1.2.3")
 }
 
 // Apply a specific Java toolchain to ease working on different environments.
@@ -48,7 +48,7 @@ java {
 }
 
 application {
-    mainClass ="examples.TypeTest";
+    mainClass ="examples.Demo";
 }
 
 mavenPublishing {
