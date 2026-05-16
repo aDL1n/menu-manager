@@ -17,7 +17,6 @@ plugins {
     id("com.gradleup.shadow") version "9.3.1"
 
     id("com.vanniktech.maven.publish") version "0.36.0"
-
 }
 
 repositories {
@@ -52,8 +51,8 @@ application {
 }
 
 mavenPublishing {
-//    publishToMavenCentral()
-//    signAllPublications()
+    publishToMavenCentral()
+    signAllPublications()
 
     coordinates(group.toString(), "menu-manager", version.toString())
 
