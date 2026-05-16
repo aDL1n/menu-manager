@@ -8,7 +8,7 @@ import io.github.bfur64.terminal.input.KeyType;
 import java.util.List;
 
 public class MenuManager {
-    private static final String VERSION_NUMBER = "0.2.0";
+    private static final String VERSION_NUMBER = "0.2.1";
     private static final int ITEM_INDENT = 3;
 
     private final Terminal terminal;
