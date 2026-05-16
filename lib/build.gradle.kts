@@ -22,6 +22,7 @@ plugins {
 
 repositories {
     // Use Maven Central for resolving dependencies.
+    mavenLocal()
     mavenCentral()
 }
 
@@ -36,7 +37,7 @@ dependencies {
     implementation(libs.guava)
 
     // Rendering Pipeline
-    implementation("io.github.bfur64:tetrue-terminal:1.2.2")
+    implementation("io.github.bfur64:tetrue-terminal:1.2.3-SNAPSHOT")
 }
 
 // Apply a specific Java toolchain to ease working on different environments.
