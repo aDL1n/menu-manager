@@ -9,6 +9,7 @@ import java.util.List;
 
 public class MenuManager {
     private static final String VERSION_NUMBER = "0.2.0";
+    private static final int ITEM_INDENT = 3;
 
     private final Terminal terminal;
     private boolean isFinished = false;
@@ -55,7 +56,7 @@ public class MenuManager {
 
     private void drawMenu() {
         for (int i = 0; i < menuList.size(); i++) {
-            terminal.putString(3, i, menuList.get(i).getDisplayName());
+            terminal.putString(ITEM_INDENT, i, menuList.get(i).getDisplayName());
         }
     }
 
@@ -98,7 +99,7 @@ public class MenuManager {
             }
             case ENTER -> {
                 Item menuItem = menuList.get(listIndex);
-                menuItem.selectItem();
+                menuItem.selectItem(new MenuContext(terminal, ITEM_INDENT,listIndex));
 
                 if (menuItem.exitRequested()) {
                     isFinished = true;
@@ -112,6 +113,7 @@ public class MenuManager {
         terminal.putString(0, listIndex, ">");
     }
 
+    @SuppressWarnings("unused")
     public static String getVersion() {
         return VERSION_NUMBER;
     }
