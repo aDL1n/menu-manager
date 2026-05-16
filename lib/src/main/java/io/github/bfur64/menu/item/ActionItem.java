@@ -1,5 +1,8 @@
 package io.github.bfur64.menu.item;
 
+import io.github.bfur64.menu.MenuContext;
+import io.github.bfur64.menu.utils.Actionable;
+
 public class ActionItem extends Item {
     private final Actionable action;
 
@@ -14,7 +17,7 @@ public class ActionItem extends Item {
     }
 
     @Override
-    public void selectItem() {
+    public void selectItem(MenuContext menuContext) {
         action.run();
     }
 }
