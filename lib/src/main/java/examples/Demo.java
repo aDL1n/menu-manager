@@ -1,46 +1,34 @@
 package examples;
 
-import io.github.bfur64.menu.input.Key;
-import io.github.bfur64.menu.input.KeyReader;
 import io.github.bfur64.menu.MenuManager;
 import io.github.bfur64.menu.item.ActionItem;
-import io.github.bfur64.menu.render.TerminalRenderer;
+import io.github.bfur64.menu.item.BreakItem;
 import io.github.bfur64.menu.item.TextItem;
 import io.github.bfur64.menu.item.Item;
-import org.jline.terminal.Terminal;
-import org.jline.terminal.TerminalBuilder;
-import org.jline.utils.InfoCmp.Capability;
+import io.github.bfur64.terminal.Terminal;
+import io.github.bfur64.terminal.input.KeyStroke;
 
 import java.util.List;
 
 public class Demo {
     public static void main(String[] args) {
         try (
-                Terminal terminal = TerminalBuilder.builder().system(true).build();
+            Terminal terminal = Terminal.auto();
         ) {
-            terminal.puts(Capability.cursor_invisible, true);
 
             List<Item> items = List.of(
-                new ActionItem("Lol", () -> {} ),
-                new ActionItem("Lol", () -> {}, true ),
-                new TextItem("Start"),
-                new TextItem("Options"),
-                new TextItem("Exit")
+                new TextItem("<< Some Kinda Title >>"),
+                new BreakItem(),
+                new ActionItem("Start", () -> {}),
+                new ActionItem("About", () -> {}),
+                new ActionItem("Exit", () -> {}, true),
+                new BreakItem(),
+                new TextItem("    This is so FUCKED!!!")
             );
 
-            KeyReader reader = new KeyReader(terminal);
-            MenuManager menu = new MenuManager(items);
-            TerminalRenderer renderer = new TerminalRenderer(terminal);
+            MenuManager menu = new MenuManager(terminal, items);
 
-            menu.update();
-            renderer.render(menu.getDrawList());
-
-            while (!menu.isFinished()) {
-                Key hit = reader.readKeyPress();
-                menu.update(hit);
-
-                renderer.render(menu.getDrawList());
-            }
+            menu.run();
         }
         catch (Exception e) {
             e.printStackTrace();
