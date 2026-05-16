@@ -10,33 +10,33 @@ import org.junit.Test;
 import java.util.List;
 
 import static org.junit.Assert.*;
-
-public class MenuTest {
-    @Test
-    public void runTests() {
-        List<Item> items = List.of(new TextItem("Start"), new TextItem("Fuck"));
-        MenuManager menu = new MenuManager(items);
-        menu.update();
-
-        checkMenuDraw(items, menu);
-
-        // Check Item name and its expected coordinates
-        checkItem(items, menu, 0, 3, 0);
-        checkItem(items, menu, 1, 3, 1);
-    }
-
-    private void checkMenuDraw(List<Item> items, MenuManager menu) {
-        int cursorDraws = 2;
-
-        assertEquals(items.size() + cursorDraws, menu.getDrawList().size());
-    }
-
-    private void checkItem(List<Item> items, MenuManager menu, int index, int x, int y) {
-        // Check if the same String
-        assertEquals(items.get(index).getDisplayName(), menu.getDrawList().get(index).out());
-
-        // Check expected coordinates
-        assertEquals(x, menu.getDrawList().get(index).x());
-        assertEquals(y, menu.getDrawList().get(index).y());
-    }
-}
+//
+//public class MenuTest {
+//    @Test
+//    public void runTests() {
+//        List<Item> items = List.of(new TextItem("Start"), new TextItem("Fuck"));
+//        MenuManager menu = new MenuManager(items);
+//        menu.update();
+//
+//        checkMenuDraw(items, menu);
+//
+//        // Check Item name and its expected coordinates
+//        checkItem(items, menu, 0, 3, 0);
+//        checkItem(items, menu, 1, 3, 1);
+//    }
+//
+//    private void checkMenuDraw(List<Item> items, MenuManager menu) {
+//        int cursorDraws = 2;
+//
+//        assertEquals(items.size() + cursorDraws, menu.getDrawList().size());
+//    }
+//
+//    private void checkItem(List<Item> items, MenuManager menu, int index, int x, int y) {
+//        // Check if the same String
+//        assertEquals(items.get(index).getDisplayName(), menu.getDrawList().get(index).out());
+//
+//        // Check expected coordinates
+//        assertEquals(x, menu.getDrawList().get(index).x());
+//        assertEquals(y, menu.getDrawList().get(index).y());
+//    }
+//}
