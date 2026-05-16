@@ -1,101 +1,118 @@
 package io.github.bfur64.menu;
 
-import io.github.bfur64.menu.input.Key;
 import io.github.bfur64.menu.item.Item;
-import io.github.bfur64.menu.render.Draw;
+import io.github.bfur64.terminal.Terminal;
+import io.github.bfur64.terminal.input.KeyStroke;
+import io.github.bfur64.terminal.input.KeyType;
 
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 public class MenuManager {
+    private static final String VERSION_NUMBER = "0.2.0";
+
+    private final Terminal terminal;
     private boolean isFinished = false;
 
-    private final List<Draw> draw = new ArrayList<>();
     private final List<Item> menuList;
 
     private int listIndex = 0;
     private int prevListIndex = listIndex;
 
-    public MenuManager(List<Item> menuList) {
+    public MenuManager(Terminal terminal, List<Item> menuList) {
+        this.terminal = terminal;
         this.menuList = menuList;
+
+        initCursor();
     }
 
-    public void update(Key keyHit) {
-        draw.clear();
+    public void run() {
+        terminal.clearScreen();
+        update();
+        terminal.flush();
 
+        while (!isFinished) {
+            KeyStroke keyStroke = terminal.readInput();
+
+            terminal.clearScreen();
+
+            update(keyStroke);
+
+            terminal.flush();
+        }
+
+        terminal.clearScreen();
+        terminal.flush();
+    }
+
+    private void update(KeyStroke keyStroke) {
         drawMenu();
-        drawCursor(keyHit);
+        drawCursor(keyStroke);
     }
 
-    public void update() {
-        update(Key.UNKNOWN);
+    private void update() {
+        update(new KeyStroke(KeyType.UNKNOWN));
     }
 
     private void drawMenu() {
         for (int i = 0; i < menuList.size(); i++) {
-            Draw drawCommand = new Draw(3, i, menuList.get(i).getDisplayName());
-
-            draw.add(drawCommand);
+            terminal.putString(3, i, menuList.get(i).getDisplayName());
         }
     }
 
-    private void drawCursor(Key key) {
-        if (key.equals(Key.ESCAPE)) {
-                isFinished = true;
+    private void initCursor() {
+        for (int i = 0; i < menuList.size(); i++) {
+            if (menuList.get(i).isSelectable()) {
+                prevListIndex = listIndex;
+                listIndex = i;
+                break;
+            }
         }
-        else if (key.equals(Key.UP)) {
-            prevListIndex = listIndex;
+    }
 
-            do {
-                listIndex--;
+    private void drawCursor(KeyStroke keyStroke) {
+        switch (keyStroke.getKeyType()) {
+            case ESCAPE -> isFinished = true;
+            case ARROW_UP -> {
+                prevListIndex = listIndex;
 
-                if (listIndex < 0) {
-                    listIndex = menuList.size() - 1;
+                do {
+                    listIndex--;
+
+                    if (listIndex < 0) {
+                        listIndex = menuList.size() - 1;
+                    }
                 }
+                while (!menuList.get(listIndex).isSelectable());
             }
-            while (!menuList.get(listIndex).isSelectable());
-        }
-        else if (key.equals(Key.DOWN)) {
-            prevListIndex = listIndex;
+            case ARROW_DOWN -> {
+                prevListIndex = listIndex;
 
-            do {
-                listIndex++;
+                do {
+                    listIndex++;
 
-                if (listIndex > menuList.size() - 1) {
-                    listIndex = 0;
+                    if (listIndex > menuList.size() - 1) {
+                        listIndex = 0;
+                    }
                 }
+                while (!menuList.get(listIndex).isSelectable());
             }
-            while (!menuList.get(listIndex).isSelectable());
-        } else if (key.equals(Key.ENTER)) {
-//                MenuContext menuContext =
-//                    new MenuContext(
-//                        draw,
-//                        3,
-//                        listIndex + 1
-//                );
+            case ENTER -> {
+                Item menuItem = menuList.get(listIndex);
+                menuItem.selectItem();
 
-            Item menuItem = menuList.get(listIndex);
+                if (menuItem.exitRequested()) {
+                    isFinished = true;
+                }
 
-//                menuItem.selectItem(menuContext);
-            menuItem.selectItem();
-
-            if (menuItem.exitRequested()) {
-                isFinished = true;
+                update();
             }
-
-            update();
         }
 
-        draw.add(new Draw(0, prevListIndex, " "));
-        draw.add(new Draw(0, listIndex, ">"));
+        terminal.putString(0, prevListIndex, " ");
+        terminal.putString(0, listIndex, ">");
     }
 
-    public List<Draw> getDrawList() {
-        return Collections.unmodifiableList(draw);
-    }
-
-    public boolean isFinished() {
-        return isFinished;
+    public static String getVersion() {
+        return VERSION_NUMBER;
     }
 }
