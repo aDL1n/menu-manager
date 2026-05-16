@@ -6,8 +6,6 @@ import io.github.bfur64.menu.item.BreakItem;
 import io.github.bfur64.menu.item.TextItem;
 import io.github.bfur64.menu.item.Item;
 import io.github.bfur64.terminal.Terminal;
-import io.github.bfur64.terminal.input.KeyStroke;
-
 import java.util.List;
 
 public class Demo {
