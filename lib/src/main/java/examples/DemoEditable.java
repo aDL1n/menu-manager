@@ -55,6 +55,7 @@ class Config {
 
     public Property<String> getNameProperty() {
         return Property.create(this::getName, this::setName, String::toString)
+            .withValidator(name -> !name.isEmpty(), "Name cannot be blank")
             .withValidator(name -> !name.equalsIgnoreCase("terrance"), "Terrance is not valid!")
             .withValidator(name -> !name.equalsIgnoreCase("Drew"), "How dare you Drew?!?!?1");
     }
@@ -68,7 +69,9 @@ class Config {
     }
 
     public Property<Integer> getAgeProperty() {
-        return Property.create(this::getAge, this::setAge, Integer::parseInt);
+        return Property.create(this::getAge, this::setAge, Integer::parseInt)
+            .withValidator(age -> age >= 18)
+            .withValidator(age -> age < 50, "You are too old!");
     }
 
     public int getAge() {
