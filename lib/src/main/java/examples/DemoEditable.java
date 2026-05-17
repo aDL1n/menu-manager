@@ -54,7 +54,9 @@ class Config {
     private boolean isAdmin;
 
     public Property<String> getNameProperty() {
-        return Property.create(this::getName, this::setName, String::toString);
+        return Property.create(this::getName, this::setName, String::toString)
+            .withValidator(name -> !name.equalsIgnoreCase("terrance"), "Terrance is not valid!")
+            .withValidator(name -> !name.equalsIgnoreCase("Drew"), "How dare you Drew?!?!?1");
     }
 
     public String getName() {

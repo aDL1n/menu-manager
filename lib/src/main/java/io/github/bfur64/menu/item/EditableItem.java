@@ -100,9 +100,19 @@ public class EditableItem<T> extends Item {
                     String userInp = sBuilder.toString();
 
                     try {
-                        setValue(property.convertFromString(userInp));
+
+                        T converted = property.convertFromString(userInp);
+
+                        if(property.isValid(converted)) {
+                            setValue(converted);
+                        }
+                        else {
+                            throwUserError(menuContext, nameOffset, property.getLatestErrorMessage());
+                        }
                     }
-                    catch (IllegalArgumentException ignored) {}
+                    catch (IllegalArgumentException e) {
+                        throwUserError(menuContext, nameOffset, "Unexpected Value");
+                    }
 
                     break loop;
                 }
@@ -110,5 +120,22 @@ public class EditableItem<T> extends Item {
         }
 
         terminal.clearScreen();
+    }
+
+    private void throwUserError(MenuContext menuContext, int nameOffset, String lastErrorMessage) {
+        @SuppressWarnings("resource") Terminal terminal = menuContext.terminal();
+
+        terminal.setForegroundColor(255, 70, 70);
+        terminal.putString(nameOffset, menuContext.y(), lastErrorMessage);
+        terminal.resetColorAndStyle();
+
+        terminal.setForegroundColor(0, 0, 0);
+        terminal.setBackgroundColor(200, 200, 200);
+        terminal.putString(nameOffset + 2, menuContext.y() + 2, "Press Any Key To Continue...");
+        terminal.resetColorAndStyle();
+
+        terminal.flush();
+
+        terminal.readInput();
     }
 }
