@@ -41,7 +41,7 @@ public class EditableItem<T> extends Item {
 
         int nameOffset = menuContext.x() + label.length() + SEPARATOR.length();
 
-        terminal.setBackgroundColor(255, 255, 255);
+        terminal.setBackgroundColor(200, 200, 200);
         terminal.setForegroundColor(0, 0, 0);
 
         terminal.putString(menuContext.x(), menuContext.y(), label);
@@ -107,11 +107,11 @@ public class EditableItem<T> extends Item {
                             setValue(converted);
                         }
                         else {
-                            throwUserError(menuContext, nameOffset, property.getLatestErrorMessage());
+                            throwUserError(menuContext, nameOffset, "!!! " + property.getLatestErrorMessage());
                         }
                     }
                     catch (IllegalArgumentException e) {
-                        throwUserError(menuContext, nameOffset, "Unexpected Value");
+                        throwUserError(menuContext, nameOffset, "!!! Unexpected Value");
                     }
 
                     break loop;
@@ -131,7 +131,7 @@ public class EditableItem<T> extends Item {
 
         terminal.setForegroundColor(0, 0, 0);
         terminal.setBackgroundColor(200, 200, 200);
-        terminal.putString(nameOffset + 2, menuContext.y() + 2, "Press Any Key To Continue...");
+        terminal.putString(nameOffset + 2, menuContext.y() + 2, "  Press Any Key To Continue...  ");
         terminal.resetColorAndStyle();
 
         terminal.flush();
