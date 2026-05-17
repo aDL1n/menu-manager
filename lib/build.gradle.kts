@@ -6,7 +6,15 @@
  */
 
 group = "io.github.bfur64"
-version = "0.2.3"
+version = "0.2.4"
+
+tasks.jar {
+    manifest {
+        attributes(
+            "Implementation-Version" to project.version
+        )
+    }
+}
 
 plugins {
     // Apply the java-library plugin for API and implementation separation.

@@ -17,6 +17,7 @@ public class DemoEditable {
 
             List<Item> items = List.of(
                 new TextItem("Editing Test"),
+                new TextItem("Menu Manager Version: " + MenuManager.getVersion()),
                 new BreakItem(),
                 new ActionItem("[ Check Credentials ]", () -> startGame(config, terminal)),
                 new BreakItem(),
