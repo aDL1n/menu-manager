@@ -14,10 +14,17 @@ public class EditableItem<T> extends Item {
 
     private final Property<T> property;
 
+    private final String suffix;
+
     public EditableItem(String label, Property<T> property) {
+        this(label, property, "");
+    }
+
+    public EditableItem(String label, Property<T> property, String suffix) {
         super(label, true);
 
         this.property = property;
+        this.suffix = suffix;
     }
 
     public T getValue() {
@@ -30,14 +37,14 @@ public class EditableItem<T> extends Item {
 
     @Override
     public String getDisplayName() {
-        return label + SEPARATOR + getValue();
+        return label + SEPARATOR + getValue() + " " + suffix;
     }
 
     @Override
     public void selectItem(MenuContext menuContext) {
         @SuppressWarnings("resource") Terminal terminal = menuContext.terminal();
 
-        int valueLength = (String.valueOf(getValue())).length();
+        int valueSuffixLength = (getValue() + " " + suffix).length();
 
         int nameOffset = menuContext.x() + label.length() + SEPARATOR.length();
 
@@ -48,7 +55,7 @@ public class EditableItem<T> extends Item {
 
         terminal.resetColorAndStyle();
 
-        for (int i = 0; i <= valueLength; i++) {
+        for (int i = 0; i <= valueSuffixLength; i++) {
             terminal.putString(nameOffset + i, menuContext.y(), " ");
         }
 

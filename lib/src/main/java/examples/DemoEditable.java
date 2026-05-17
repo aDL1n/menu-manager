@@ -23,7 +23,7 @@ public class DemoEditable {
                 new BreakItem(),
                 new EditableItem<>("Name", config.getNameProperty()),
                 new EditableItem<>("Age", config.getAgeProperty()),
-                new EditableItem<>("Allowance", config.getAllowanceProperty()),
+                new EditableItem<>("Allowance", config.getAllowanceProperty(), "Pesos"),
                 new ToggleItem("Admin", config.getAdminProperty())
             );
 

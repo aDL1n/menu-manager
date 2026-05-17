@@ -6,7 +6,7 @@
  */
 
 group = "io.github.bfur64"
-version = "0.2.4"
+version = "0.2.5"
 
 tasks.jar {
     manifest {
