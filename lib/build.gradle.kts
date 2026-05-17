@@ -6,7 +6,7 @@
  */
 
 group = "io.github.bfur64"
-version = "0.2.2"
+version = "0.2.3"
 
 plugins {
     // Apply the java-library plugin for API and implementation separation.
@@ -47,7 +47,7 @@ java {
 }
 
 application {
-    mainClass ="examples.StressTest";
+    mainClass ="examples.DemoEditable";
 }
 
 mavenPublishing {
