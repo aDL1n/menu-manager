@@ -13,9 +13,15 @@ public class DemoEditable {
         try (Terminal terminal = Terminal.auto()) {
             Config config = new Config();
 
+            List<String> terminalInfo = terminal.getTerminalInfo();
+
             MenuManager menu = new MenuManager(terminal, List.of(
                 new StaticText("Editing Test"),
-                new StaticText("Menu Manager v" + MenuManager.getVersion()),
+                new StaticText("Menu Manager: " + MenuManager.getVersion()),
+                new StaticText("Renderer: " + terminal.getCurrentTerminal()),
+                new StaticText(terminalInfo.getFirst()),
+                new StaticText(terminalInfo.get(1)),
+                new StaticText(terminalInfo.getLast()),
                 new LineBreak(),
                 new ActionItem("[ Check Credentials ]", () -> startGame(config, terminal)),
                 new LineBreak(),

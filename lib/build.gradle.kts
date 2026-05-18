@@ -6,15 +6,14 @@
  */
 
 group = "io.github.bfur64"
-version = "0.3.0"
-
+version = "0.3.0-SNAPSHOT"
 
 tasks.processResources {
     val versionString = project.version.toString()
 
     inputs.property("version", versionString)
 
-    filesMatching("settings.json.template") {
+    filesMatching("io/github/bfur64/menu/settings.json.template") {
         expand(mapOf("version" to versionString))
     }
 
@@ -53,7 +52,7 @@ dependencies {
     implementation(libs.guava)
 
     // Rendering Pipeline
-    implementation("io.github.bfur64:tetrue-terminal:1.2.3")
+    implementation("io.github.bfur64:tetrue-terminal:1.3.0-SNAPSHOT")
 
     // JSON Reader
     implementation("tools.jackson.core:jackson-databind:3.1.3")

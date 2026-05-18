@@ -9,7 +9,7 @@ class Config {
     public static final String VERSION;
 
     static {
-        InputStream is = Config.class.getResourceAsStream("/settings.json");
+        InputStream is = Config.class.getResourceAsStream("/io/github/bfur64/menu/settings.json");
 
         ObjectMapper objectMapper = new ObjectMapper();
         JsonNode jsonNode = objectMapper.readTree(is);
