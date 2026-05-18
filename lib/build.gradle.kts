@@ -6,14 +6,19 @@
  */
 
 group = "io.github.bfur64"
-version = "0.2.5"
+version = "0.3.0"
 
-tasks.jar {
-    manifest {
-        attributes(
-            "Implementation-Version" to project.version
-        )
+
+tasks.processResources {
+    val versionString = project.version.toString()
+
+    inputs.property("version", versionString)
+
+    filesMatching("settings.json.template") {
+        expand(mapOf("version" to versionString))
     }
+
+    rename("(.+)\\.template", "$1")
 }
 
 plugins {
@@ -25,6 +30,10 @@ plugins {
     id("com.gradleup.shadow") version "9.3.1"
 
     id("com.vanniktech.maven.publish") version "0.36.0"
+}
+
+shadow {
+    addShadowVariantIntoJavaComponent = false
 }
 
 repositories {
@@ -45,6 +54,9 @@ dependencies {
 
     // Rendering Pipeline
     implementation("io.github.bfur64:tetrue-terminal:1.2.3")
+
+    // JSON Reader
+    implementation("tools.jackson.core:jackson-databind:3.1.3")
 }
 
 // Apply a specific Java toolchain to ease working on different environments.
