@@ -8,15 +8,15 @@ import io.github.bfur64.terminal.input.KeyType;
 
 public class EditableItem<T> extends Item {
     private final String separator;
-    private final Property<T> property;
+    protected final Property<T> property;
     private final String suffix;
 
-    private Terminal terminal;
+    protected Terminal terminal;
     private int itemX;
     private int itemY;
 
     public EditableItem(String name, Property<T> property) {
-        this(name, "", property);
+        this(name, " = ", property);
     }
 
     public EditableItem(String name, String separator, Property<T> property) {
@@ -49,7 +49,12 @@ public class EditableItem<T> extends Item {
 
         selectItemName();
         clearItemValueSuffix(nameOffset);
+        readUserInput(nameOffset);
 
+        terminal.clearScreen();
+    }
+
+    protected void readUserInput(int nameOffset) {
         StringBuilder builderOut = new StringBuilder();
         int cursorPos = nameOffset;
 
@@ -94,8 +99,6 @@ public class EditableItem<T> extends Item {
                 }
             }
         }
-
-        terminal.clearScreen();
     }
 
     private void selectItemName() {
@@ -113,7 +116,7 @@ public class EditableItem<T> extends Item {
         }
     }
 
-    private void throwUserError(int nameOffset, String lastErrorMessage) {
+    protected void throwUserError(int nameOffset, String lastErrorMessage) {
         terminal.setForegroundColor(255, 70, 70);
         terminal.putString(nameOffset, itemY, lastErrorMessage);
         terminal.resetColorAndStyle();

@@ -4,6 +4,8 @@ import io.github.bfur64.menu.MenuManager;
 import io.github.bfur64.menu.item.*;
 import io.github.bfur64.menu.utils.Property;
 import io.github.bfur64.terminal.Terminal;
+import io.github.bfur64.terminal.input.KeyStroke;
+import io.github.bfur64.terminal.input.KeyType;
 
 import java.io.IOException;
 import java.util.List;
@@ -29,12 +31,14 @@ public class DemoEditable {
                 new EditableItem<>("Age", ": ", config.getAgeProperty()),
                 new EditableItem<>("Allowance", " = ", config.getAllowanceProperty(), "Pesos"),
                 new ToggleItem("Admin", config.getAdminProperty()),
+                new KeyReaderItem("Read Key", config.getDropBlockProperty()),
                 new LineBreak(),
                 new StaticText("  | Dynamic Text |"),
                 new LineBreak(),
                 new DynamicText<>("Dynamic Name : ", config::getName),
                 new DynamicText<>("Dynamic Age: ", config::getAge),
                 new DynamicText<>("Dynamic Allowance = ", "PHP", config::getAllowance),
+                new DynamicText<>("Drop Block Key: ", config::getDropBlock),
                 new LineBreak(),
                 new ActionItem("[ Exit ]", true)
             ));
@@ -64,6 +68,8 @@ class Config {
     private int age;
     private double allowance;
     private boolean isAdmin;
+
+    private KeyStroke dropBlock = new KeyStroke(KeyType.ARROW_DOWN);
 
     public Property<String> getNameProperty() {
         return Property.create(this::getName, this::setName, String::toString)
@@ -95,7 +101,7 @@ class Config {
     }
 
     public Property<Double> getAllowanceProperty() {
-        return Property.create(this::getAllowance, this::setAllowance, Double::parseDouble);
+        return Property.create(this::getAllowance, this::setAllowance);
     }
 
     public double getAllowance() {
@@ -107,7 +113,7 @@ class Config {
     }
 
     public Property<Boolean> getAdminProperty() {
-        return Property.create(this::isAdmin, this::setAdmin, Boolean::parseBoolean);
+        return Property.create(this::isAdmin, this::setAdmin);
     }
 
     public boolean isAdmin() {
@@ -116,5 +122,17 @@ class Config {
 
     public void setAdmin(boolean admin) {
         isAdmin = admin;
+    }
+
+    public Property<KeyStroke> getDropBlockProperty() {
+        return Property.create(this::getDropBlock, this::setDropBlock);
+    }
+
+    public KeyStroke getDropBlock() {
+        return dropBlock;
+    }
+
+    public void setDropBlock(KeyStroke dropBlock) {
+        this.dropBlock = dropBlock;
     }
 }

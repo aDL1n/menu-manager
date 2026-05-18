@@ -30,6 +30,12 @@ public interface Property<T> {
 
     T convertString(String value);
 
+    static <T> Property<T> create(Supplier<T> getter, Consumer<T> setter) {
+        return create(getter, setter, s -> {
+            throw new UnsupportedOperationException("String conversion not available");
+        } );
+    }
+
     static <T> Property<T> create(Supplier<T> getter, Consumer<T> setter, Function<String, T> function) {
         return new Property<>() {
             private final List<Predicate<T>> validators = new ArrayList<>();
