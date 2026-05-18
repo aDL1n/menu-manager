@@ -9,25 +9,18 @@ public class ToggleItem extends Item {
 
     private final Property<Boolean> property;
 
-    public ToggleItem(String label, Property<Boolean> property) {
-        super(label, true);
-
+    public ToggleItem(String name, Property<Boolean> property) {
+        super(name, true);
         this.property = property;
     }
 
     @Override
     public String getDisplayName() {
-        String toggle = property.get() ? TOGGLE_ON : TOGGLE_OFF;
-        return toggle + " " + label;
+        return (property.getValue() ? TOGGLE_ON : TOGGLE_OFF) + " " + name;
     }
 
     @Override
     public void selectItem(MenuContext menuContext) {
-        if (property.get()) {
-            property.set(false);
-        }
-        else {
-            property.set(true);
-        }
+        property.setValue(!property.getValue());
     }
 }

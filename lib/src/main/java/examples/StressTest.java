@@ -2,7 +2,7 @@ package examples;
 
 import io.github.bfur64.menu.MenuManager;
 import io.github.bfur64.menu.item.ActionItem;
-import io.github.bfur64.menu.item.TextItem;
+import io.github.bfur64.menu.item.StaticText;
 import io.github.bfur64.terminal.Terminal;
 
 import java.io.IOException;
@@ -33,33 +33,33 @@ public class StressTest {
 
     private void test1() {
         MenuManager menu = new MenuManager(terminal, List.of(
-                new TextItem("Text Only"),
-                new TextItem("Text Only"),
-                new TextItem("Text Only"),
-                new TextItem("Text Only")
+                new StaticText("Text Only"),
+                new StaticText("Text Only"),
+                new StaticText("Text Only"),
+                new StaticText("Text Only")
         ));
         menu.run();
     }
 
     private void test2() {
         MenuManager menu = new MenuManager(terminal, List.of(
-                new TextItem("Text Only"),
-                new TextItem("Text Only"),
-                new TextItem("Text Only"),
-                new TextItem("Text Only"),
+                new StaticText("Text Only"),
+                new StaticText("Text Only"),
+                new StaticText("Text Only"),
+                new StaticText("Text Only"),
                 new ActionItem("Action!", () -> {}),
-                new TextItem("Text Only"),
-                new TextItem("Text Only"),
-                new TextItem("Text Only"),
-                new TextItem("Text Only"),
-                new TextItem("Text Only"),
-                new TextItem("Text Only"),
-                new TextItem("Text Only"),
-                new TextItem("Text Only"),
-                new TextItem("Text Only"),
-                new TextItem("Text Only"),
-                new TextItem("Text Only"),
-                new TextItem("Text Only")
+                new StaticText("Text Only"),
+                new StaticText("Text Only"),
+                new StaticText("Text Only"),
+                new StaticText("Text Only"),
+                new StaticText("Text Only"),
+                new StaticText("Text Only"),
+                new StaticText("Text Only"),
+                new StaticText("Text Only"),
+                new StaticText("Text Only"),
+                new StaticText("Text Only"),
+                new StaticText("Text Only"),
+                new StaticText("Text Only")
         ));
         menu.run();
     }
@@ -67,21 +67,21 @@ public class StressTest {
     private void test3() {
         MenuManager menu = new MenuManager(terminal, List.of(
                 new ActionItem("Action!", () -> {}),
-                new TextItem("Text Only"),
-                new TextItem("Text Only"),
-                new TextItem("Text Only"),
-                new TextItem("Text Only"),
-                new TextItem("Text Only"),
-                new TextItem("Text Only"),
-                new TextItem("Text Only"),
-                new TextItem("Text Only"),
-                new TextItem("Text Only"),
-                new TextItem("Text Only"),
-                new TextItem("Text Only"),
-                new TextItem("Text Only"),
-                new TextItem("Text Only"),
-                new TextItem("Text Only"),
-                new TextItem("Text Only"),
+                new StaticText("Text Only"),
+                new StaticText("Text Only"),
+                new StaticText("Text Only"),
+                new StaticText("Text Only"),
+                new StaticText("Text Only"),
+                new StaticText("Text Only"),
+                new StaticText("Text Only"),
+                new StaticText("Text Only"),
+                new StaticText("Text Only"),
+                new StaticText("Text Only"),
+                new StaticText("Text Only"),
+                new StaticText("Text Only"),
+                new StaticText("Text Only"),
+                new StaticText("Text Only"),
+                new StaticText("Text Only"),
                 new ActionItem("Action!", () -> {})
         ));
         menu.run();
@@ -90,22 +90,22 @@ public class StressTest {
     private void test4() {
         MenuManager menu = new MenuManager(terminal, List.of(
                 new ActionItem("Action!", () -> {}),
-                new TextItem("Text Only"),
-                new TextItem("Text Only"),
-                new TextItem("Text Only"),
-                new TextItem("Text Only"),
-                new TextItem("Text Only"),
-                new TextItem("Text Only"),
-                new TextItem("Text Only"),
+                new StaticText("Text Only"),
+                new StaticText("Text Only"),
+                new StaticText("Text Only"),
+                new StaticText("Text Only"),
+                new StaticText("Text Only"),
+                new StaticText("Text Only"),
+                new StaticText("Text Only"),
                 new ActionItem("Action!", () -> {}),
-                new TextItem("Text Only"),
-                new TextItem("Text Only"),
-                new TextItem("Text Only"),
-                new TextItem("Text Only"),
-                new TextItem("Text Only"),
-                new TextItem("Text Only"),
-                new TextItem("Text Only"),
-                new TextItem("Text Only"),
+                new StaticText("Text Only"),
+                new StaticText("Text Only"),
+                new StaticText("Text Only"),
+                new StaticText("Text Only"),
+                new StaticText("Text Only"),
+                new StaticText("Text Only"),
+                new StaticText("Text Only"),
+                new StaticText("Text Only"),
                 new ActionItem("Action!", () -> {})
         ));
         menu.run();

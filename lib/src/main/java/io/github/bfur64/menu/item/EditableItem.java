@@ -6,63 +6,52 @@ import io.github.bfur64.terminal.Terminal;
 import io.github.bfur64.terminal.input.KeyStroke;
 import io.github.bfur64.terminal.input.KeyType;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class EditableItem<T> extends Item {
-    private static final String SEPARATOR = " = ";
-
+    private final String separator;
     private final Property<T> property;
-
     private final String suffix;
 
-    public EditableItem(String label, Property<T> property) {
-        this(label, property, "");
+    private Terminal terminal;
+    private int itemX;
+    private int itemY;
+
+    public EditableItem(String name, Property<T> property) {
+        this(name, "", property);
     }
 
-    public EditableItem(String label, Property<T> property, String suffix) {
-        super(label, true);
+    public EditableItem(String name, String separator, Property<T> property) {
+        this(name, separator, property, "");
+    }
 
+    public EditableItem(String name, Property<T> property, String suffix) {
+        this(name, " = ", property, suffix);
+    }
+
+    public EditableItem(String name, String separator, Property<T> property, String suffix) {
+        super(name, true);
+        this.separator = separator;
         this.property = property;
         this.suffix = suffix;
     }
 
-    public T getValue() {
-        return property.get();
-    }
-
-    public void setValue(T value) {
-        property.set(value);
-    }
-
     @Override
     public String getDisplayName() {
-        return label + SEPARATOR + getValue() + " " + suffix;
+        return super.getDisplayName() + separator + property.getValue() + " " + suffix;
     }
 
     @Override
     public void selectItem(MenuContext menuContext) {
-        @SuppressWarnings("resource") Terminal terminal = menuContext.terminal();
+        terminal = menuContext.terminal();
+        itemX = menuContext.itemX();
+        itemY = menuContext.itemY();
 
-        int valueSuffixLength = (getValue() + " " + suffix).length();
+        int nameOffset = itemX + (name + separator).length();
 
-        int nameOffset = menuContext.x() + label.length() + SEPARATOR.length();
+        selectItemName();
+        clearItemValueSuffix(nameOffset);
 
-        terminal.setBackgroundColor(200, 200, 200);
-        terminal.setForegroundColor(0, 0, 0);
-
-        terminal.putString(menuContext.x(), menuContext.y(), label);
-
-        terminal.resetColorAndStyle();
-
-        for (int i = 0; i <= valueSuffixLength; i++) {
-            terminal.putString(nameOffset + i, menuContext.y(), " ");
-        }
-
+        StringBuilder builderOut = new StringBuilder();
         int cursorPos = nameOffset;
-
-        List<Character> charInp = new ArrayList<>();
-        StringBuilder sBuilder = new StringBuilder();
 
         loop:
         while (true) {
@@ -70,55 +59,35 @@ public class EditableItem<T> extends Item {
 
             KeyStroke keyStroke = terminal.readInput();
             KeyType keyType = keyStroke.getKeyType();
-            Character character;
 
             switch (keyType) {
-                case ESCAPE -> {
-                    break loop;
-                }
+                case ESCAPE -> { break loop; }
                 case CHARACTER -> {
-                    character = keyStroke.getCharacter();
-
-                    terminal.putString(cursorPos, menuContext.y(), character.toString());
-
+                    char character = keyStroke.getCharacter();
+                    builderOut.append(character);
+                    terminal.putString(cursorPos, itemY, String.valueOf(character));
                     cursorPos++;
-
-                    charInp.add(character);
                 }
                 case BACKSPACE -> {
-                    character = ' ';
-                    cursorPos--;
-
-                    if (cursorPos < nameOffset) {
-                        cursorPos = nameOffset;
-                    }
-
-                    terminal.putString(cursorPos, menuContext.y(), character.toString());
-
-                    if (!charInp.isEmpty()) {
-                        charInp.removeLast();
+                    if (!builderOut.isEmpty()) {
+                        cursorPos--;
+                        builderOut.deleteCharAt(builderOut.length() - 1);
+                        terminal.putString(cursorPos, itemY, " ");
                     }
                 }
                 case ENTER -> {
-                    for (Character ch : charInp) {
-                        sBuilder.append(ch);
-                    }
-
-                    String userInp = sBuilder.toString();
-
                     try {
+                        String stringOut = builderOut.toString();
 
-                        T converted = property.convertFromString(userInp);
+                        if (property.isValid(stringOut)) {
+                            property.setValue(stringOut);
+                            break loop;
+                        }
 
-                        if(property.isValid(converted)) {
-                            setValue(converted);
-                        }
-                        else {
-                            throwUserError(menuContext, nameOffset, "!!! " + property.getLatestErrorMessage());
-                        }
+                        throwUserError(nameOffset, property.getLatestErrorMessage());
                     }
                     catch (IllegalArgumentException e) {
-                        throwUserError(menuContext, nameOffset, "!!! Unexpected Value");
+                        throwUserError(nameOffset, "Unexpected Input");
                     }
 
                     break loop;
@@ -129,16 +98,29 @@ public class EditableItem<T> extends Item {
         terminal.clearScreen();
     }
 
-    private void throwUserError(MenuContext menuContext, int nameOffset, String lastErrorMessage) {
-        @SuppressWarnings("resource") Terminal terminal = menuContext.terminal();
+    private void selectItemName() {
+        terminal.setBackgroundColor(200, 200, 200);
+        terminal.setForegroundColor(0, 0, 0);
+        terminal.putString(itemX, itemY, name);
+        terminal.resetColorAndStyle();
+    }
 
+    private void clearItemValueSuffix(int nameOffset) {
+        int valueSuffixLength = (separator + property.getValue() + " " + suffix).length();
+
+        for (int i = 0; i <= valueSuffixLength; i++) {
+            terminal.putString(nameOffset + i, itemY, " ");
+        }
+    }
+
+    private void throwUserError(int nameOffset, String lastErrorMessage) {
         terminal.setForegroundColor(255, 70, 70);
-        terminal.putString(nameOffset, menuContext.y(), lastErrorMessage);
+        terminal.putString(nameOffset, itemY, lastErrorMessage);
         terminal.resetColorAndStyle();
 
         terminal.setForegroundColor(0, 0, 0);
         terminal.setBackgroundColor(200, 200, 200);
-        terminal.putString(nameOffset + 2, menuContext.y() + 2, "  Press Any Key To Continue...  ");
+        terminal.putString(nameOffset + 2, itemY + 2, "  Press Any Key To Continue...  ");
         terminal.resetColorAndStyle();
 
         terminal.flush();

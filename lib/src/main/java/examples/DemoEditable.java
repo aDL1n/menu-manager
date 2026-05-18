@@ -10,38 +10,43 @@ import java.util.List;
 
 public class DemoEditable {
     public static void main(String[] args) throws IOException {
-        try (
-            Terminal terminal = Terminal.auto()
-        ) {
+        try (Terminal terminal = Terminal.auto()) {
             Config config = new Config();
 
-            List<Item> items = List.of(
-                new TextItem("Editing Test"),
-                new TextItem("Menu Manager Version: " + MenuManager.getVersion()),
-                new BreakItem(),
+            MenuManager menu = new MenuManager(terminal, List.of(
+                new StaticText("Editing Test"),
+                new StaticText("Menu Manager v" + MenuManager.getVersion()),
+                new LineBreak(),
                 new ActionItem("[ Check Credentials ]", () -> startGame(config, terminal)),
-                new BreakItem(),
-                new EditableItem<>("Name", config.getNameProperty()),
-                new EditableItem<>("Age", config.getAgeProperty()),
-                new EditableItem<>("Allowance", config.getAllowanceProperty(), "Pesos"),
-                new ToggleItem("Admin", config.getAdminProperty())
-            );
-
-            MenuManager menu = new MenuManager(terminal, items);
+                new LineBreak(),
+                new EditableItem<>("Name", ": ", config.getNameProperty()),
+                new EditableItem<>("Age", ": ", config.getAgeProperty()),
+                new EditableItem<>("Allowance", " = ", config.getAllowanceProperty(), "Pesos"),
+                new ToggleItem("Admin", config.getAdminProperty()),
+                new LineBreak(),
+                new StaticText("  | Dynamic Text |"),
+                new LineBreak(),
+                new DynamicText<>("Dynamic Name : ", config::getName),
+                new DynamicText<>("Dynamic Age: ", config::getAge),
+                new DynamicText<>("Dynamic Allowance = ", "PHP", config::getAllowance),
+                new LineBreak(),
+                new ActionItem("[ Exit ]", true)
+            ));
+            
             menu.run();
         }
     }
 
     private static void startGame(Config config, Terminal terminal) {
         MenuManager menu = new MenuManager(terminal, List.of(
-                new TextItem("Credentials"),
-                new BreakItem(),
-                new TextItem("Name: " + config.getName()),
-                new TextItem("Age: " + config.getAge()),
-                new TextItem("Allowance: " + config.getAllowance()),
-                new TextItem("Admin: " + config.isAdmin()),
-                new BreakItem(),
-                new ActionItem("[ Return ]", () -> {}, true)
+                new StaticText("Credentials"),
+                new LineBreak(),
+                new StaticText("Name: " + config.getName()),
+                new StaticText("Age: " + config.getAge()),
+                new StaticText("Allowance: " + config.getAllowance()),
+                new StaticText("Admin: " + config.isAdmin()),
+                new LineBreak(),
+                new ActionItem("[ Return ]", true)
         ));
 
         menu.run();

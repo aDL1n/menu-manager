@@ -8,19 +8,27 @@ import java.util.function.Predicate;
 import java.util.function.Supplier;
 
 public interface Property<T> {
-    T get();
-    void set(T value);
-    T convertFromString(String value);
+    T getValue();
+
+    default void setValue(String value) {
+        setValue(convertString(value));
+    }
+
+    void setValue(T value);
+
+    default boolean isValid(String value) {
+        return isValid(convertString(value));
+    }
+
+    boolean isValid(T value);
 
     default Property<T> withValidator(Predicate<T> validator) {
         return withValidator(validator, "Invalid value");
     }
-
     Property<T> withValidator(Predicate<T> validator, String message);
-
-    boolean isValid(T value);
-
     String getLatestErrorMessage();
+
+    T convertString(String value);
 
     static <T> Property<T> create(Supplier<T> getter, Consumer<T> setter, Function<String, T> function) {
         return new Property<>() {
@@ -28,23 +36,12 @@ public interface Property<T> {
             private final List<String> errorMessages = new ArrayList<>();
             private String latestErrorMessage;
 
-            public T get() {
+            public T getValue() {
                 return getter.get();
             }
 
-            public void set(T value) {
+            public void setValue(T value) {
                 setter.accept(value);
-            }
-
-            public T convertFromString(String value) {
-                return function.apply(value);
-            }
-
-            public Property<T> withValidator(Predicate<T> validator, String message) {
-                validators.add(validator);
-                errorMessages.add(message);
-
-                return this;
             }
 
             public boolean isValid(T value) {
@@ -59,8 +56,19 @@ public interface Property<T> {
                 return true;
             }
 
+            public Property<T> withValidator(Predicate<T> validator, String message) {
+                validators.add(validator);
+                errorMessages.add(message);
+
+                return this;
+            }
+
             public String getLatestErrorMessage() {
                 return latestErrorMessage;
+            }
+
+            public T convertString(String value) {
+                return function.apply(String.valueOf(value));
             }
         };
     }

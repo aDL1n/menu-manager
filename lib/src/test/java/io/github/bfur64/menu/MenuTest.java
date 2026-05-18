@@ -3,10 +3,6 @@
  */
 package io.github.bfur64.menu;
 
-import io.github.bfur64.menu.item.Item;
-import io.github.bfur64.menu.item.TextItem;
-import org.junit.Test;
-
 import java.util.List;
 
 import static org.junit.Assert.*;

@@ -109,7 +109,7 @@ public class MenuManager {
         Item menuItem = menuList.get(cursorPos);
         menuItem.selectItem(new MenuContext(terminal, ITEM_INDENT, cursorPos));
 
-        if (menuItem.exitRequested()) {
+        if (menuItem.shouldExit()) {
             isRunning = false;
         }
 
@@ -118,6 +118,6 @@ public class MenuManager {
 
     @SuppressWarnings("unused")
     public static String getVersion() {
-        return Config.VERSION_NUMBER;
+        return Config.VERSION;
     }
 }

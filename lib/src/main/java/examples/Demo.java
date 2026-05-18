@@ -2,8 +2,8 @@ package examples;
 
 import io.github.bfur64.menu.MenuManager;
 import io.github.bfur64.menu.item.ActionItem;
-import io.github.bfur64.menu.item.BreakItem;
-import io.github.bfur64.menu.item.TextItem;
+import io.github.bfur64.menu.item.LineBreak;
+import io.github.bfur64.menu.item.StaticText;
 import io.github.bfur64.menu.item.Item;
 import io.github.bfur64.terminal.Terminal;
 import java.util.List;
@@ -15,13 +15,13 @@ public class Demo {
         ) {
 
             List<Item> items = List.of(
-                new TextItem("<< Some Kinda Title >>"),
-                new BreakItem(),
+                new StaticText("<< Some Kinda Title >>"),
+                new LineBreak(),
                 new ActionItem("Start", () -> {}),
                 new ActionItem("About", () -> {}),
                 new ActionItem("Exit", () -> {}, true),
-                new BreakItem(),
-                new TextItem("    This is so FUCKED!!!")
+                new LineBreak(),
+                new StaticText("    This is so FUCKED!!!")
             );
 
             MenuManager menu = new MenuManager(terminal, items);
