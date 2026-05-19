@@ -77,9 +77,12 @@ class Config {
             .require(name -> !name.equalsIgnoreCase("drew"))
             .parser(String::toString).build();
 
+    private Integer ageInt = 0;
     Property<Integer> age = Property.of(0)
             .require(age -> age >= 18)
             .require(age -> age < 50, "You are too old!")
+            .setter(value -> ageInt = value )
+            .getter( () -> ageInt )
             .parser(Integer::parseInt).build();
 
     Property<Double> allowance = Property.of(0D)
