@@ -3,12 +3,12 @@
 <h3 align="center">A lightweight, composable menu system for terminal applications</h3>
 
 <div align="center">
-  <img width="300" alt="Example Image of Repository (If Any)" src=""/>
+  <img width="612" height="296" alt="" src="https://github.com/user-attachments/assets/82459d5a-0a77-45b0-9c9e-877d924a65a9" />
 </div>
 
 ## Demo
 
-(Video or GIF)
+<img width="640" height="524" alt="" src="https://github.com/user-attachments/assets/f12e00a0-4743-4df6-a0f2-9ef731c8cbe1" />
 
 ## Quick Start
 
