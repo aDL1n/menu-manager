@@ -1,3 +1,7 @@
+[![License](https://img.shields.io/github/license/bfur64/menu-manager)](LICENSE)
+[![Java](https://img.shields.io/badge/Java-21%2B-blue)](https://openjdk.org/)
+[![Maven Central](https://img.shields.io/maven-central/v/io.github.bfur64/menu-manager)](https://central.sonatype.com/artifact/io.github.bfur64/menu-manager)
+
 <h1 align="center">Menu Manager</h1>
 
 <h3 align="center">A lightweight, composable menu system for terminal applications</h3>
