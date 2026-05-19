@@ -1,28 +1,376 @@
 <h1 align="center">Menu Manager</h1>
 
-<h3 align="center">A composable main menu system, built in Java using the Tetrue Terminal Library</h3>
+<h3 align="center">A lightweight, composable menu system for terminal applications</h3>
 
 <div align="center">
   <img width="300" alt="Example Image of Repository (If Any)" src=""/>
 </div>
 
 ## Demo
+
 (Video or GIF)
 
-## Features
+## Quick Start
 
-## Usage
+```java
+Property<Integer> volume = Property.of(50)
+    .require(v -> v >= 0 && v <= 100, "Volume must be 0-100")
+    .parser(Integer::parseInt)
+    .build();
 
-## Limitations
-
-## Environment Issues
-
-## Architecture Overview
+MenuManager menu = new MenuManager(terminal, List.of(
+    new StaticText("== Settings =="),
+    new InputItem<>("Volume", volume, "%"),
+    new ToggleItem("Mute", Property.of(false).build()),
+    new ActionItem("[ Save ]", () -> System.out.println("Saved!"))
+));
+menu.run();
+```
 
 ## Installation / Running
 
+#### Dependencies
+
+```kotlin
+dependencies {
+    implementation("io.github.bfur64:menu-manager:x.x.x")
+    implementation("io.github.bfur64:terminal:x.x.x")
+}
+```
+
+## Features
+
+- Declarative terminal menu composition
+- Generic mutable `Property<T>` state system
+- Built-in validation and parsing pipelines
+- Editable menu items with inline error handling
+- Dynamic rendering support
+- Custom keybind editing
+- Zero reflection
+- Pure Java
+
+## Usage
+
+### Basic Menu
+
+```java
+List<Item> items = List.of(
+        new StaticText("== Settings =="),
+        new EditableItem<>("Gravity", gravity),
+        new ToggleItem("Fullscreen", fullscreen),
+        new ActionItem("[ Start Game ]", this::startGame),
+        new ActionItem("[ Exit ]", true)
+);
+
+MenuManager menu = new MenuManager(terminal, items);
+menu.run();
+```
+
+### Properties & Validation
+
+`Property<T>` is the core mutable state abstraction used throughout the menu system.
+A property can define:
+- Current value storage
+- Validation rules
+- Error messages
+- String parsing logic (Optional)
+- Custom getters/setters (Optional)
+
+```java
+public static Property<Integer> gravity = Property.of(500)
+        .require(value -> value >= 50, "Gravity must be at least 50 ms")
+        .require(value -> value <= 2000, "Gravity must be less than 2000 ms")
+        .parser(Integer::parseInt)
+        .build();
+```
+
+Editable menu items (e.g. `InputItem`, `KeyInputItem`, `ToggleItem`) automatically use these validators and error messages.
+
+### Custom Setters & Getters
+
+Custom getters and setters allow properties to bind directly to external state instead of using internally managed storage.
+
+Define a class for external state
+
+```java
+class Config {
+    int fps = 60;
+
+    public int getFps() { ... }
+    public void setFps(int fps) { ... }
+}
+Config config = new Config();
+```
+
+Usage
+```java
+Property<Integer> fps =
+        Property.<Integer>of(60)
+                .getter(config::getFps)
+                .setter(config::setFps)
+                .parser(Integer::parseInt)
+                .build();
+```
+
+or direct lambda call
+
+```java
+Integer fpsField = 50;
+Property<Integer> fps =
+        Property.<Integer>of(60)
+                .getter(() -> fpsField )
+                .setter(fps -> {fpsField = fps; })
+                .build();
+```
+
+### Key Bindings
+
+```java
+public static Property<KeyStroke> rotateLeftKey = Property.of(new KeyStroke('q')).build();
+
+public static Property<KeyStroke> rotateRightKey =Property.of(new KeyStroke('e')).build();
+```
+
+### Chaining Menus
+
+From your `App.java` pattern:
+
+```java
+private void showMainMenu() {
+    MenuManager menu = new MenuManager(terminal, List.of(
+        new ActionItem("[ Options ]", this::showOptionsMenu),
+        new ActionItem("[ Exit ]", true)
+    ));
+    menu.run();
+}
+
+private void showOptionsMenu() {
+    MenuManager menu = new MenuManager(terminal, List.of(
+        new InputItem<>("Volume", volumeProperty),
+        new ActionItem("[ Back ]", true)  // Returns to main menu
+    ));
+    menu.run();
+    // Control returns here after submenu exits
+}
+```
+
+Menus can stack. Calling `new MenuManager().run()` inside an `ActionItem` creates a submenu.
+
+## Complete Examples
+
+### Game Settings Menu
+
+```java
+// 1. Define your config with Properties
+class GameConfig {
+    static Property<Integer> difficulty = Property.of(5)
+        .require(d -> d >= 1 && d <= 10, "Difficulty must be 1-10")
+        .parser(Integer::parseInt)
+        .build();
+    
+    static Property<KeyStroke> jumpKey = Property.of(new KeyStroke(' '))
+        .build();
+    
+    static Property<Boolean> soundEnabled = Property.of(true)
+        .build();
+}
+
+// 2. Build your menu
+public static void main(String[] args) throws IOException {
+    try (Terminal terminal = Terminal.auto()) {
+        MenuManager menu = new MenuManager(terminal, List.of(
+            new LineBreak(),
+            new StaticText("== Game Settings =="),
+            new LineBreak(),
+            new InputItem<>("Difficulty", ": ", GameConfig.difficulty),
+            new KeyInputItem("Jump Key", GameConfig.jumpKey),
+            new ToggleItem("Sound", GameConfig.soundEnabled),
+            new LineBreak(),
+            new ActionItem("[ Start Game ]", () -> startGame(terminal)),
+            new ActionItem("[ Exit ]", true)
+        ));
+        
+        menu.run();
+    }
+}
+
+// 3. Use the validated config in your game
+private static void startGame(Terminal terminal) {
+    int difficulty = GameConfig.difficulty.get();  // Guaranteed valid
+    KeyStroke jump = GameConfig.jumpKey.get();
+    
+    // Game loop
+    while (true) {
+        KeyStroke input = terminal.readInput();
+        if (input.equals(jump)) {
+            player.jump();
+        }
+    }
+}
+```
+
+### Error Handling
+
+When a user enters invalid input, Menu Manager:
+1. Catches the error from the Property validator
+2. Displays the error message in red below the item
+3. Prompts "Press Any Key To Continue"
+4. Returns to editing without losing the menu state
+
+```java
+Property<Integer> age = Property.of(18)
+    .require(a -> a >= 18, "Must be 18 or older")
+    .require(a -> a <= 100, "Really?")
+    .parser(Integer::parseInt)
+    .build();
+
+new InputItem<>("Age", age);
+
+// User types "15" and presses Enter:
+// → Screen shows: "Must be 18 or older" (in red)
+// → Waits for any key press
+// → Returns to menu (value unchanged)
+```
+
+## API Reference
+
+### Menu Items
+
+| Item Type | Purpose | Constructor Example |
+|-----------|---------|---------------------|
+| `StaticText` | Non-interactive labels | `new StaticText("== Header ==")` |
+| `LineBreak` | Visual spacing | `new LineBreak()` |
+| `InputItem<T>` | User-editable values with validation | `new InputItem<>("Name", property)` |
+| `InputItem<T>` (with suffix) | Editable with units | `new InputItem<>("Speed", property, "km/h")` |
+| `ToggleItem` | Boolean on/off switch | `new ToggleItem("Enabled", boolProperty)` |
+| `ActionItem` | Executes callback on select | `new ActionItem("[ Start ]", this::start)` |
+| `ActionItem` (exit) | Exits menu after action | `new ActionItem("[ Save ]", this::save, true)` |
+| `KeyInputItem` | Keybind editor | `new KeyInputItem("Jump", keyProperty)` |
+| `DynamicText<T>` | Auto-updating display | `new DynamicText<>("FPS: ", fps::get)` |
+
+### Item Constructors
+
+```java
+// InputItem variants
+new InputItem<>("Name", property)
+new InputItem<>("Name", ": ", property)  // Custom separator
+new InputItem<>("Speed", property, "km/h")  // With suffix
+new InputItem<>("Speed", " = ", property, "km/h")  // Both
+
+// ActionItem variants
+new ActionItem("[ Start ]", callback)  // Regular action
+new ActionItem("[ Exit ]", true)  // Exit menu after
+new ActionItem("[ Save ]", this::save, true)  // Both
+
+// DynamicText variants
+new DynamicText<>("Value: ", supplier)
+new DynamicText<>("Price: ", "$", supplier)  // With prefix
+```
+
+### Property Builder
+
+```java
+Property.of(initialValue)
+    .require(predicate)  // Validation without message (uses default)
+    .require(predicate, "Error message")  // With custom error
+    .parser(String::parseMethod)  // String → T conversion
+    .getter(supplier)  // Read from external state
+    .setter(consumer)  // Write to external state
+    .build()
+```
+
+**Key Methods:**
+- `T get()` - Retrieve current value
+- `void set(T value)` - Update value (throws if invalid)
+- `void set(String stringValue)` - Parse and set (requires `.parser()`)
+- `boolean isValid(T value)` - Check without setting
+- `boolean isValid(String stringValue)` - Parse and check
+- `String getLatestError()` - Get last validation failure message
+
+## How It Works
+
+Menu Manager uses a simple render loop that:
+
+1. Renders all items to the terminal buffer
+2. Draws the cursor (`>`) at the current position
+3. Blocks waiting for user input
+4. Processes the keystroke (arrow keys, Enter, Escape)
+5. Loops until an exit condition
+
+```java
+// Simplified internal flow
+while (isRunning) {
+    terminal.clearScreen();
+    
+    // Render all items
+    for (Item item : menuList) {
+        terminal.putString(x, y, item.getDisplayName());
+    }
+    
+    // Draw cursor
+    terminal.putString(0, cursorPos, ">");
+    
+    terminal.flush();
+    
+    // Block and process input
+    KeyStroke key = terminal.readInput();
+    handleInput(key);
+}
+```
+
+**Editable Items:**
+When you select an `InputItem`, it:
+1. Highlights the item name with inverted colors
+2. Enters an **inline editing mode** (separate input loop)
+3. Validates each Enter press using the Property's rules
+4. Shows validation errors in red below the item
+5. Returns to the main menu on Escape or successful validation
+
+**Cursor Navigation:**
+The cursor automatically skips non-selectable items (like `StaticText` and `LineBreak`), wrapping at boundaries.
+
+**Parser errors:**
+If parsing fails (e.g., user types "abc" for an `Integer` property), the default error is `"Unexpected Input"`
+
+## Limitations
+
+- **Single-threaded rendering**: The menu blocks the main thread during `run()`
+- **No mouse support**: Keyboard navigation only (arrow keys, Enter, Escape)
+- **Full screen redraws**: Every input triggers `clearScreen()` (works for small menus)
+- **No scrolling**: All menu items must fit on screen simultaneously
+- **Static item lists**: Menu structure is immutable after construction (use `DynamicText` for updating values)
+- **Terminal dependent**: Requires ANSI color support and proper keystroke detection
+- **No nested validation**: Property validators are single-level predicates
+
+## Requirements
+
+- **Java**: 21 or higher
+- **Terminal**: ANSI escape sequence support required
+
+### Tested Terminals
+
+✅ **Fully Supported:**
+- Windows Terminal
+- Powershell
+- CMD
+- Linux xterm
+- Termux
+
+⚠️ **Partial Support:**
+- Not yet confirmed
+
+❌ **Not Supported:**
+- Not yet confirmed
+
+**Auto-detection:** The library uses `Terminal.auto()` to detect and select a backend (JLine3 or Lanterna for Termux).
+
 ## Tech Stack
 
-## Development Envrionment
+- **Terminal Abstraction**: [Tetrue Terminal](https://github.com/BFUR64/tetrue-terminal) — Unified API over JLine3 and Lanterna
+- **Build Tool**: Gradle 9.3.1
+- **Language**: Pure Java 21+ (no Kotlin, no reflection, no annotations)
+- **Dependencies**: Only `terminal` (user must provide compatible backend)
 
-## Why I Built This
+## Why This Exists
+
+I built Menu Manager while creating a terminal-based Tetris clone, and realized this can be spun-off into its own library. Which I did, and have been promptly updating.
