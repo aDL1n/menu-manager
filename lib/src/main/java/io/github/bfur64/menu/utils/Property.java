@@ -7,75 +7,122 @@ import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
 
-public interface Property<T> {
-    T getValue();
+public class Property<T> implements AbstractProperty<T> {
+    private final Supplier<T> getter;
+    private final Consumer<T> setter;
+    private final Function<String, T> parser;
 
-    default void setValue(String value) {
-        setValue(convertString(value));
+    private final List<Predicate<T>> validators;
+    private final List<String> errors;
+    private String latestError;
+
+    public static <T> Builder<T> of(T initialValue) {
+        Builder<T> builder = new Builder<>();
+        return builder.create(initialValue);
     }
 
-    void setValue(T value);
-
-    default boolean isValid(String value) {
-        return isValid(convertString(value));
-    }
-
-    boolean isValid(T value);
-
-    default Property<T> withValidator(Predicate<T> validator) {
-        return withValidator(validator, "Invalid value");
-    }
-    Property<T> withValidator(Predicate<T> validator, String message);
-    String getLatestErrorMessage();
-
-    T convertString(String value);
-
-    static <T> Property<T> create(Supplier<T> getter, Consumer<T> setter) {
-        return create(getter, setter, s -> {
+    private Property(Supplier<T> getter, Consumer<T> setter, List<Predicate<T>> validators, List<String> errors) {
+        this(getter, setter, validators, errors, s -> {
             throw new UnsupportedOperationException("String conversion not available");
-        } );
+        });
     }
 
-    static <T> Property<T> create(Supplier<T> getter, Consumer<T> setter, Function<String, T> function) {
-        return new Property<>() {
-            private final List<Predicate<T>> validators = new ArrayList<>();
-            private final List<String> errorMessages = new ArrayList<>();
-            private String latestErrorMessage;
+     private Property(Supplier<T> getter, Consumer<T> setter, List<Predicate<T>> validators, List<String> errors, Function<String, T> parser) {
+        this.getter = getter;
+        this.setter = setter;
+        this.validators = validators;
+        this.errors = errors;
+        this.parser = parser;
+    }
 
-            public T getValue() {
-                return getter.get();
+    @Override
+    public T get() {
+        return getter.get();
+    }
+
+    @Override
+    public void set(T value) {
+        setter.accept(value);
+    }
+
+    @Override
+    public void set(String value) {
+        setter.accept(parse(value));
+    }
+
+    @Override
+    public boolean isValid(T value) {
+        for (int i = 0; i < validators.size(); i++) {
+            if (!validators.get(i).test(value)) {
+                latestError = errors.get(i);
+                return false;
+            }
+        }
+
+        latestError = null;
+        return true;
+    }
+
+    @Override
+    public boolean isValid(String value) {
+        return isValid(parse(value));
+    }
+
+    @Override
+    public String getLatestError() {
+        return latestError;
+    }
+
+    @Override
+    public T parse(String value) {
+        return parser.apply(value);
+    }
+
+    public static class Builder<T> {
+        private ValueHolder<T> holder;
+        private Supplier<T> getter;
+        private Consumer<T> setter;
+        private Function<String, T> parser;
+
+        private final List<Predicate<T>> validators = new ArrayList<>();
+        private final List<String> errors = new ArrayList<>();
+
+        public Builder<T> create(T initialValue) {
+            holder = new ValueHolder<>(initialValue);
+            getter = () -> holder.value;
+            setter = newValue -> { holder.value = newValue; };
+
+            return this;
+        }
+
+        public Builder<T> require(Predicate<T> predicate) {
+            validators.add(predicate);
+            errors.add("Invalid Value");
+            return this;
+        }
+
+        public Builder<T> require(Predicate<T> predicate, String error) {
+            validators.add(predicate);
+            errors.add(error);
+            return this;
+        }
+
+        public Builder<T> parser(Function<String, T> parser) {
+            this.parser = parser;
+            return this;
+        }
+
+        public Property<T> build() {
+            if (parser != null) {
+                return new Property<T>(getter, setter, validators, errors, parser);
             }
 
-            public void setValue(T value) {
-                setter.accept(value);
-            }
+            return new Property<T>(getter, setter, validators, errors);
+        }
 
-            public boolean isValid(T value) {
-                for (int i = 0; i < validators.size(); i++) {
-                    if (!validators.get(i).test(value)) {
-                        latestErrorMessage = errorMessages.get(i);
-                        return false;
-                    }
-                }
-
-                latestErrorMessage = null;
-                return true;
-            }
-
-            public Property<T> withValidator(Predicate<T> validator, String message) {
-                validators.add(validator);
-                errorMessages.add(message);
-
-                return this;
-            }
-
-            public String getLatestErrorMessage() {
-                return latestErrorMessage;
-            }
-
-            public T convertString(String value) {
-                return function.apply(String.valueOf(value));
-            }
-        };
+        private static class ValueHolder<T> {
+            T value;
+            ValueHolder(T initialValue) { value = initialValue; }
+        }
     }
 }
