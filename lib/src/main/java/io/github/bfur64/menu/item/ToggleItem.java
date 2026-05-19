@@ -16,11 +16,11 @@ public class ToggleItem extends Item {
 
     @Override
     public String getDisplayName() {
-        return (property.getValue() ? TOGGLE_ON : TOGGLE_OFF) + " " + name;
+        return (property.get() ? TOGGLE_ON : TOGGLE_OFF) + " " + name;
     }
 
     @Override
     public void selectItem(MenuContext menuContext) {
-        property.setValue(!property.getValue());
+        property.set(!property.get());
     }
 }

@@ -6,7 +6,7 @@ import io.github.bfur64.terminal.Terminal;
 import io.github.bfur64.terminal.input.KeyStroke;
 import io.github.bfur64.terminal.input.KeyType;
 
-public class EditableItem<T> extends Item {
+public class InputItem<T> extends Item {
     private final String separator;
     protected final Property<T> property;
     private final String suffix;
@@ -15,19 +15,19 @@ public class EditableItem<T> extends Item {
     private int itemX;
     private int itemY;
 
-    public EditableItem(String name, Property<T> property) {
+    public InputItem(String name, Property<T> property) {
         this(name, " = ", property);
     }
 
-    public EditableItem(String name, String separator, Property<T> property) {
+    public InputItem(String name, String separator, Property<T> property) {
         this(name, separator, property, "");
     }
 
-    public EditableItem(String name, Property<T> property, String suffix) {
+    public InputItem(String name, Property<T> property, String suffix) {
         this(name, " = ", property, suffix);
     }
 
-    public EditableItem(String name, String separator, Property<T> property, String suffix) {
+    public InputItem(String name, String separator, Property<T> property, String suffix) {
         super(name, true);
         this.separator = separator;
         this.property = property;
@@ -36,7 +36,7 @@ public class EditableItem<T> extends Item {
 
     @Override
     public String getDisplayName() {
-        return super.getDisplayName() + separator + property.getValue() + " " + suffix;
+        return super.getDisplayName() + separator + property.get() + " " + suffix;
     }
 
     @Override
@@ -85,11 +85,11 @@ public class EditableItem<T> extends Item {
                         String stringOut = builderOut.toString();
 
                         if (property.isValid(stringOut)) {
-                            property.setValue(stringOut);
+                            property.set(stringOut);
                             break loop;
                         }
 
-                        throwUserError(nameOffset, property.getLatestErrorMessage());
+                        throwUserError(nameOffset, property.getLatestError());
                     }
                     catch (IllegalArgumentException e) {
                         throwUserError(nameOffset, "Unexpected Input");
@@ -109,7 +109,7 @@ public class EditableItem<T> extends Item {
     }
 
     private void clearItemValueSuffix(int nameOffset) {
-        int valueSuffixLength = (separator + property.getValue() + " " + suffix).length();
+        int valueSuffixLength = (separator + property.get() + " " + suffix).length();
 
         for (int i = 0; i <= valueSuffixLength; i++) {
             terminal.putString(nameOffset + i, itemY, " ");

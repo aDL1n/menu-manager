@@ -27,18 +27,18 @@ public class DemoEditable {
                 new LineBreak(),
                 new ActionItem("[ Check Credentials ]", () -> startGame(config, terminal)),
                 new LineBreak(),
-                new EditableItem<>("Name", ": ", config.getNameProperty()),
-                new EditableItem<>("Age", ": ", config.getAgeProperty()),
-                new EditableItem<>("Allowance", " = ", config.getAllowanceProperty(), "Pesos"),
-                new ToggleItem("Admin", config.getAdminProperty()),
-                new KeyReaderItem("Read Key", config.getDropBlockProperty()),
+                new InputItem<>("Name", ": ", config.username),
+                new InputItem<>("Age", ": ", config.age),
+                new InputItem<>("Allowance", " = ", config.allowance, "Pesos"),
+                new ToggleItem("Admin", config.admin),
+                new KeyInputItem("Read Key", config.dropBlock),
                 new LineBreak(),
                 new StaticText("  | Dynamic Text |"),
                 new LineBreak(),
-                new DynamicText<>("Dynamic Name : ", config::getName),
-                new DynamicText<>("Dynamic Age: ", config::getAge),
-                new DynamicText<>("Dynamic Allowance = ", "PHP", config::getAllowance),
-                new DynamicText<>("Drop Block Key: ", config::getDropBlock),
+                new DynamicText<>("Dynamic Name : ", config.username::get),
+                new DynamicText<>("Dynamic Age: ", config.age::get),
+                new DynamicText<>("Dynamic Allowance = ", "PHP", config.allowance::get),
+                new DynamicText<>("Drop Block Key: ", config.allowance::get),
                 new LineBreak(),
                 new ActionItem("[ Exit ]", true)
             ));
@@ -51,88 +51,41 @@ public class DemoEditable {
         MenuManager menu = new MenuManager(terminal, List.of(
                 new StaticText("Credentials"),
                 new LineBreak(),
-                new StaticText("Name: " + config.getName()),
-                new StaticText("Age: " + config.getAge()),
-                new StaticText("Allowance: " + config.getAllowance()),
-                new StaticText("Admin: " + config.isAdmin()),
+                new StaticText("Name: " + config.username.get()),
+                new StaticText("Age: " + config.age.get()),
+                new StaticText("Allowance: " + config.allowance.get()),
+                new StaticText("Admin: " + config.admin.get()),
                 new LineBreak(),
                 new ActionItem("[ Return ]", true)
         ));
+
+        int age = config.age.get();
+        int newAge = 34;
+
+        if (config.age.isValid(newAge)) {
+            config.age.set(newAge);
+        }
 
         menu.run();
     }
 }
 
 class Config {
-    private String name;
-    private int age;
-    private double allowance;
-    private boolean isAdmin;
+    Property<String> username = Property.of("")
+            .require(name -> !name.isEmpty(), "Name cannot be blank")
+            .require(name -> !name.equalsIgnoreCase("terrance"), "Terrance is not valid?!?!")
+            .require(name -> !name.equalsIgnoreCase("drew"))
+            .parser(String::toString).build();
 
-    private KeyStroke dropBlock = new KeyStroke(KeyType.ARROW_DOWN);
+    Property<Integer> age = Property.of(0)
+            .require(age -> age >= 18)
+            .require(age -> age < 50, "You are too old!")
+            .parser(Integer::parseInt).build();
 
-    public Property<String> getNameProperty() {
-        return Property.create(this::getName, this::setName, String::toString)
-            .withValidator(name -> !name.isEmpty(), "Name cannot be blank")
-            .withValidator(name -> !name.equalsIgnoreCase("terrance"), "Terrance is not valid!")
-            .withValidator(name -> !name.equalsIgnoreCase("Drew"), "How dare you Drew?!?!?1");
-    }
+    Property<Double> allowance = Property.of(0D)
+            .parser(Double::parseDouble).build();
 
-    public String getName() {
-        return name;
-    }
+    Property<Boolean> admin = Property.of(false).build();
 
-    public void setName(String value) {
-        name = value;
-    }
-
-    public Property<Integer> getAgeProperty() {
-        return Property.create(this::getAge, this::setAge, Integer::parseInt)
-            .withValidator(age -> age >= 18)
-            .withValidator(age -> age < 50, "You are too old!");
-    }
-
-    public int getAge() {
-        return age;
-    }
-
-    public void setAge(int value) {
-        age = value;
-    }
-
-    public Property<Double> getAllowanceProperty() {
-        return Property.create(this::getAllowance, this::setAllowance);
-    }
-
-    public double getAllowance() {
-        return allowance;
-    }
-
-    public void setAllowance(double allowance) {
-        this.allowance = allowance;
-    }
-
-    public Property<Boolean> getAdminProperty() {
-        return Property.create(this::isAdmin, this::setAdmin);
-    }
-
-    public boolean isAdmin() {
-        return isAdmin;
-    }
-
-    public void setAdmin(boolean admin) {
-        isAdmin = admin;
-    }
-
-    public Property<KeyStroke> getDropBlockProperty() {
-        return Property.create(this::getDropBlock, this::setDropBlock);
-    }
-
-    public KeyStroke getDropBlock() {
-        return dropBlock;
-    }
-
-    public void setDropBlock(KeyStroke dropBlock) {
-        this.dropBlock = dropBlock;
-    }
+    Property<KeyStroke> dropBlock = Property.of(new KeyStroke(KeyType.ARROW_DOWN)).build();
 }
