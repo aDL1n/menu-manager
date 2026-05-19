@@ -132,7 +132,7 @@ Property<Integer> fps =
 ```java
 public static Property<KeyStroke> rotateLeftKey = Property.of(new KeyStroke('q')).build();
 
-public static Property<KeyStroke> rotateRightKey =Property.of(new KeyStroke('e')).build();
+public static Property<KeyStroke> rotateRightKey = Property.of(new KeyStroke('e')).build();
 ```
 
 ### Chaining Menus
