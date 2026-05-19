@@ -137,8 +137,6 @@ public static Property<KeyStroke> rotateRightKey = Property.of(new KeyStroke('e'
 
 ### Chaining Menus
 
-From your `App.java` pattern:
-
 ```java
 private void showMainMenu() {
     MenuManager menu = new MenuManager(terminal, List.of(
@@ -354,17 +352,16 @@ If parsing fails (e.g., user types "abc" for an `Integer` property), the default
 ### Tested Terminals
 
 ✅ **Fully Supported:**
-- Windows Terminal
-- Powershell
-- CMD
+- Windows Terminal (Windows 11)
+- Powershell 7
+- CMD.exe
 - Linux xterm
-- Termux
+- WSL2
+- Termux (Android)
 
-⚠️ **Partial Support:**
-- Not yet confirmed
-
-❌ **Not Supported:**
-- Not yet confirmed
+❓ **Untested (likely works):**
+- macOS Terminal, iTerm2
+- Other Linux terminals
 
 **Auto-detection:** The library uses `Terminal.auto()` to detect and select a backend (JLine3 or Lanterna for Termux).
 
