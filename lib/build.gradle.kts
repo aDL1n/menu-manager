@@ -6,7 +6,7 @@
  */
 
 group = "io.github.bfur64"
-version = "0.5.0"
+version = "0.6.0"
 
 tasks.processResources {
     val versionString = project.version.toString()
@@ -52,7 +52,7 @@ dependencies {
     implementation(libs.guava)
 
     // Rendering Pipeline
-    implementation("io.github.bfur64:tetrue-terminal:1.4.0")
+    implementation("io.github.bfur64:tetrue-terminal:1.5.0")
 
     // JSON Reader
     implementation("tools.jackson.core:jackson-databind:3.1.3")

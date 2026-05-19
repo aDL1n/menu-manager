@@ -79,7 +79,6 @@ public class Property<T> implements AbstractProperty<T> {
     }
 
     public static class Builder<T> {
-        private ValueHolder<T> holder;
         private Supplier<T> getter;
         private Consumer<T> setter;
         private Function<String, T> parser;
@@ -87,11 +86,10 @@ public class Property<T> implements AbstractProperty<T> {
         private final List<Predicate<T>> validators = new ArrayList<>();
         private final List<String> errors = new ArrayList<>();
 
-        public Builder<T> create(T initialValue) {
-            holder = new ValueHolder<>(initialValue);
+        private Builder<T> create(T initialValue) {
+            ValueHolder<T> holder = new ValueHolder<>(initialValue);
             getter = () -> holder.value;
             setter = newValue -> { holder.value = newValue; };
-
             return this;
         }
 
@@ -104,6 +102,16 @@ public class Property<T> implements AbstractProperty<T> {
         public Builder<T> require(Predicate<T> predicate, String error) {
             validators.add(predicate);
             errors.add(error);
+            return this;
+        }
+
+        public Builder<T> setter(Consumer<T> setter) {
+            this.setter = setter;
+            return this;
+        }
+
+        public Builder<T> getter(Supplier<T> getter) {
+            this.getter = getter;
             return this;
         }
 
