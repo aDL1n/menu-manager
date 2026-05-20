@@ -26,7 +26,7 @@ public class KeyInputItem extends InputItem<KeyStroke> {
         while (true) {
             KeyStroke keyStroke = terminal.readInput();
 
-            if (keyStroke.getKeyType() == KeyType.UNKNOWN) {
+            if (keyStroke.keyType() == KeyType.UNKNOWN) {
                 throwUserError(nameOffset, "Unknown Character!");
                 continue;
             }
@@ -35,6 +35,5 @@ public class KeyInputItem extends InputItem<KeyStroke> {
 
             break;
         }
-
     }
 }

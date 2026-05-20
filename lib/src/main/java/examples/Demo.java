@@ -5,14 +5,15 @@ import io.github.bfur64.menu.item.ActionItem;
 import io.github.bfur64.menu.item.LineBreak;
 import io.github.bfur64.menu.item.StaticText;
 import io.github.bfur64.menu.item.Item;
-import io.github.bfur64.terminal.Terminal;
+import io.github.bfur64.terminal.BufferedDefaultTerminal;
+import io.github.bfur64.terminal.TerminalBackend;
+
 import java.util.List;
 
 public class Demo {
     public static void main(String[] args) {
-        try (
-            Terminal terminal = Terminal.auto();
-        ) {
+        try (TerminalBackend terminal = BufferedDefaultTerminal.auto()) {
+            terminal.start();
 
             List<Item> items = List.of(
                 new StaticText("<< Some Kinda Title >>"),

@@ -1,7 +1,7 @@
 package io.github.bfur64.menu;
 
 import io.github.bfur64.menu.item.Item;
-import io.github.bfur64.terminal.Terminal;
+import io.github.bfur64.terminal.TerminalBackend;
 import io.github.bfur64.terminal.input.KeyStroke;
 import io.github.bfur64.terminal.input.KeyType;
 
@@ -10,7 +10,7 @@ import java.util.List;
 public class MenuManager {
     private static final int ITEM_INDENT = 3;
 
-    private final Terminal terminal;
+    private final TerminalBackend terminal;
     private boolean isRunning = true;
 
     private final List<Item> menuList;
@@ -18,7 +18,7 @@ public class MenuManager {
     private int cursorPos = 0;
     private int prevCursorPos = cursorPos;
 
-    public MenuManager(Terminal terminal, List<Item> menuList) {
+    public MenuManager(TerminalBackend terminal, List<Item> menuList) {
         this.terminal = terminal;
         this.menuList = menuList;
 
@@ -55,7 +55,7 @@ public class MenuManager {
 
     private void drawMenu() {
         for (int i = 0; i < menuList.size(); i++) {
-            terminal.putString(ITEM_INDENT, i, menuList.get(i).getDisplayName());
+            terminal.put(ITEM_INDENT, i, menuList.get(i).getDisplayName());
         }
     }
 
@@ -70,7 +70,7 @@ public class MenuManager {
     }
 
     private void drawCursor(KeyStroke keyStroke) {
-        switch (keyStroke.getKeyType()) {
+        switch (keyStroke.keyType()) {
             case ESCAPE -> isRunning = false;
             case ARROW_UP -> moveCursor(-1);
             case ARROW_DOWN -> moveCursor(+1);
@@ -84,8 +84,8 @@ public class MenuManager {
 
         if (selectable == 0) return;
 
-        terminal.putString(0, prevCursorPos, " ");
-        terminal.putString(0, cursorPos, ">");
+        terminal.put(0, prevCursorPos, " ");
+        terminal.put(0, cursorPos, ">");
     }
 
     private void moveCursor(int cursorMovement) {
