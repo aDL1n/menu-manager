@@ -1,9 +1,9 @@
 package io.github.bfur64.menu;
 
-import io.github.bfur64.terminal.TerminalBackend;
+import io.github.bfur64.terminal.Terminal;
 
 public record MenuContext (
-    TerminalBackend terminal,
+    Terminal terminal,
     int itemX,
     int itemY
 ) {}

@@ -3,16 +3,16 @@ package examples;
 import io.github.bfur64.menu.MenuManager;
 import io.github.bfur64.menu.item.ActionItem;
 import io.github.bfur64.menu.item.StaticText;
-import io.github.bfur64.terminal.BufferedDefaultTerminal;
-import io.github.bfur64.terminal.TerminalBackend;
+import io.github.bfur64.terminal.Terminal;
 
+import java.io.IOException;
 import java.util.List;
 
 public class StressTest {
-    private final TerminalBackend terminal;
+    private final Terminal terminal;
 
-    public static void main(String[] args) throws Exception {
-        try (BufferedDefaultTerminal terminal = BufferedDefaultTerminal.auto()) {
+    public static void main(String[] args) throws IOException {
+        try (Terminal terminal = Terminal.auto()) {
             terminal.start();
 
             StressTest test = new StressTest(terminal);
@@ -27,7 +27,7 @@ public class StressTest {
         }
     }
 
-    public StressTest(BufferedDefaultTerminal terminal) {
+    public StressTest(Terminal terminal) {
         this.terminal = terminal;
     }
 

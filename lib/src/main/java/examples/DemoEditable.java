@@ -3,8 +3,7 @@ package examples;
 import io.github.bfur64.menu.MenuManager;
 import io.github.bfur64.menu.item.*;
 import io.github.bfur64.menu.utils.Property;
-import io.github.bfur64.terminal.BufferedDefaultTerminal;
-import io.github.bfur64.terminal.TerminalBackend;
+import io.github.bfur64.terminal.Terminal;
 import io.github.bfur64.terminal.input.KeyStroke;
 import io.github.bfur64.terminal.input.KeyType;
 
@@ -12,20 +11,17 @@ import java.io.IOException;
 import java.util.List;
 
 public class DemoEditable {
-    public static void main(String[] args) throws Exception {
-        try (TerminalBackend terminal = BufferedDefaultTerminal.auto()) {
+    public static void main(String[] args) throws IOException {
+        try (Terminal terminal = Terminal.auto()) {
             terminal.start();
             Config config = new Config();
-
-//            List<String> terminalInfo = terminal.getTerminalInfo();
 
             MenuManager menu = new MenuManager(terminal, List.of(
                 new StaticText("Editing Test"),
                 new StaticText("Menu Manager: " + MenuManager.getVersion()),
                 new StaticText("Renderer: " + terminal.getTerminalInfo()),
-//                new StaticText(terminalInfo.getFirst()),
-//                new StaticText(terminalInfo.get(1)),
-//                new StaticText(terminalInfo.getLast()),
+                new StaticText(terminal.getTerminalInfo()),
+                new StaticText(Terminal.getLibraryInfo()),
                 new LineBreak(),
                 new ActionItem("[ Check Credentials ]", () -> startGame(config, terminal)),
                 new LineBreak(),
@@ -49,7 +45,7 @@ public class DemoEditable {
         }
     }
 
-    private static void startGame(Config config, TerminalBackend terminal) {
+    private static void startGame(Config config, Terminal terminal) {
         MenuManager menu = new MenuManager(terminal, List.of(
                 new StaticText("Credentials"),
                 new LineBreak(),

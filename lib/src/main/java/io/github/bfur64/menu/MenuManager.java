@@ -1,7 +1,7 @@
 package io.github.bfur64.menu;
 
 import io.github.bfur64.menu.item.Item;
-import io.github.bfur64.terminal.TerminalBackend;
+import io.github.bfur64.terminal.Terminal;
 import io.github.bfur64.terminal.input.KeyStroke;
 import io.github.bfur64.terminal.input.KeyType;
 
@@ -10,7 +10,7 @@ import java.util.List;
 public class MenuManager {
     private static final int ITEM_INDENT = 3;
 
-    private final TerminalBackend terminal;
+    private final Terminal terminal;
     private boolean isRunning = true;
 
     private final List<Item> menuList;
@@ -18,7 +18,7 @@ public class MenuManager {
     private int cursorPos = 0;
     private int prevCursorPos = cursorPos;
 
-    public MenuManager(TerminalBackend terminal, List<Item> menuList) {
+    public MenuManager(Terminal terminal, List<Item> menuList) {
         this.terminal = terminal;
         this.menuList = menuList;
 
