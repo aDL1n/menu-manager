@@ -363,11 +363,11 @@ If parsing fails (e.g., user types "abc" for an `Integer` property), the default
 - macOS Terminal, iTerm2
 - Other Linux terminals
 
-**Auto-detection:** The library uses `Terminal.auto()` to detect and select a backend (JLine3 or Lanterna for Termux).
+**Auto-detection:** The library uses `Terminal.auto()` for either normal or termux mode
 
 ## Tech Stack
 
-- **Terminal Abstraction**: [Tetrue Terminal](https://github.com/BFUR64/tetrue-terminal) — Unified API over JLine3 and Lanterna
+- **Terminal Abstraction**: [Tetrue Terminal](https://github.com/BFUR64/tetrue-terminal) — Lanterna-like abstraction layer for JLine3
 - **Build Tool**: Gradle 9.3.1
 - **Language**: Pure Java 21+ (no Kotlin, no reflection, no annotations)
 - **Dependencies**: Only `terminal` (user must provide compatible backend)
