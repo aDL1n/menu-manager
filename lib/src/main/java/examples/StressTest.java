@@ -4,17 +4,18 @@ import io.github.bfur64.menu.MenuManager;
 import io.github.bfur64.menu.item.ActionItem;
 import io.github.bfur64.menu.item.StaticText;
 import io.github.bfur64.terminal.Terminal;
+import io.github.bfur64.terminal.interfaces.TerminalBackend;
 
 import java.io.IOException;
 import java.util.List;
 
 public class StressTest {
-    private final Terminal terminal;
+    private final TerminalBackend terminal;
 
     public static void main(String[] args) throws IOException {
-        try (
-            Terminal terminal = Terminal.auto()
-        ) {
+        try (TerminalBackend terminal = Terminal.auto()) {
+            terminal.start();
+
             StressTest test = new StressTest(terminal);
 
             MenuManager menu = new MenuManager(terminal, List.of(
@@ -27,7 +28,7 @@ public class StressTest {
         }
     }
 
-    public StressTest(Terminal terminal) {
+    public StressTest(TerminalBackend terminal) {
         this.terminal = terminal;
     }
 
