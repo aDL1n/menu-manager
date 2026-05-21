@@ -6,12 +6,13 @@ import io.github.bfur64.menu.item.LineBreak;
 import io.github.bfur64.menu.item.StaticText;
 import io.github.bfur64.menu.item.Item;
 import io.github.bfur64.terminal.Terminal;
+import io.github.bfur64.terminal.interfaces.TerminalBackend;
 
 import java.util.List;
 
 public class Demo {
     public static void main(String[] args) {
-        try (Terminal terminal = Terminal.auto()) {
+        try (TerminalBackend terminal = Terminal.auto()) {
             terminal.start();
 
             List<Item> items = List.of(

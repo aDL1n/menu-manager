@@ -6,13 +6,14 @@ import io.github.bfur64.menu.utils.Property;
 import io.github.bfur64.terminal.Terminal;
 import io.github.bfur64.terminal.input.KeyStroke;
 import io.github.bfur64.terminal.input.KeyType;
+import io.github.bfur64.terminal.interfaces.TerminalBackend;
 
 import java.io.IOException;
 import java.util.List;
 
 public class DemoEditable {
     public static void main(String[] args) throws IOException {
-        try (Terminal terminal = Terminal.auto()) {
+        try (TerminalBackend terminal = Terminal.auto()) {
             terminal.start();
             Config config = new Config();
 
@@ -45,7 +46,7 @@ public class DemoEditable {
         }
     }
 
-    private static void startGame(Config config, Terminal terminal) {
+    private static void startGame(Config config, TerminalBackend terminal) {
         MenuManager menu = new MenuManager(terminal, List.of(
                 new StaticText("Credentials"),
                 new LineBreak(),

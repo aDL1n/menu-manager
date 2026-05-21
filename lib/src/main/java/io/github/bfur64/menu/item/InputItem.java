@@ -2,16 +2,16 @@ package io.github.bfur64.menu.item;
 
 import io.github.bfur64.menu.MenuContext;
 import io.github.bfur64.menu.utils.Property;
-import io.github.bfur64.terminal.Terminal;
 import io.github.bfur64.terminal.input.KeyStroke;
 import io.github.bfur64.terminal.input.KeyType;
+import io.github.bfur64.terminal.interfaces.TerminalBackend;
 
 public class InputItem<T> extends Item {
     private final String separator;
     protected final Property<T> property;
     private final String suffix;
 
-    protected Terminal terminal;
+    protected TerminalBackend terminal;
     private int itemX;
     private int itemY;
 
