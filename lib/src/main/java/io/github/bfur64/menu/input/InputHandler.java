@@ -1,22 +1,30 @@
 package io.github.bfur64.menu.input;
 
 import io.github.bfur64.terminal.input.KeyStroke;
-import io.github.bfur64.terminal.input.KeyType;
 
-import java.util.EnumMap;
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 public class InputHandler {
 
-    private final Map<KeyType, Action> actions = new EnumMap<>(KeyType.class);
+    private final List<KeyAction> actions = new ArrayList<>();
 
-    public void setKeyAction(KeyType keyType, Action action) {
-        this.actions.put(keyType, action);
+    public void addKeyActions(List<KeyAction> keyActions) {
+        this.actions.addAll(keyActions);
+    }
+
+    public void addKeyActions(KeyAction... keyActions) {
+        addKeyActions(Arrays.stream(keyActions).toList());
+    }
+
+    public void addKeyAction(KeyAction keyAction) {
+        this.actions.add(keyAction);
     }
 
     public void handle(KeyStroke keyStroke) {
-        actions.entrySet().stream()
-                .filter(entry -> entry.getKey() == keyStroke.keyType())
-                .forEach(entry -> entry.getValue().execute());
+        actions.stream()
+                .filter(keyAction -> keyAction.keyStroke() == keyStroke)
+                .forEach(keyAction -> keyAction.action().execute());
     }
 }

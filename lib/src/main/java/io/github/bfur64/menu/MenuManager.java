@@ -1,32 +1,31 @@
 package io.github.bfur64.menu;
 
 import io.github.bfur64.menu.input.InputHandler;
+import io.github.bfur64.menu.input.KeyAction;
 import io.github.bfur64.menu.item.Item;
 import io.github.bfur64.terminal.input.KeyStroke;
 import io.github.bfur64.terminal.input.KeyType;
 import io.github.bfur64.terminal.interfaces.TerminalBackend;
 
-import java.util.Collections;
 import java.util.List;
 
 public class MenuManager {
+
     private static final KeyStroke UNKNOWN_KEY = new KeyStroke(KeyType.UNKNOWN);
 
-    private final int itemIdent;
-
     private final TerminalBackend terminal;
-    private boolean isRunning = true;
-
-    private final List<Item> menuList;
-
     private final MenuCursor cursor;
-
     private final MenuRenderer renderer;
     private final InputHandler inputHandler;
 
+    private final int itemIdent;
+    private final List<Item> menuList;
+
+    private boolean isRunning = true;
+
     public MenuManager(TerminalBackend terminal, List<Item> menuList) {
         this.terminal = terminal;
-        this.menuList = Collections.unmodifiableList(menuList);
+        this.menuList = menuList;
 
         final Position cursorPosition = initCursorPosition();
         this.cursor = new MenuCursor(cursorPosition, ">>>");
@@ -53,10 +52,6 @@ public class MenuManager {
         terminal.flush();
     }
 
-    public void exit() {
-        this.isRunning = false;
-    }
-
     private void update(KeyStroke keyStroke) {
         this.inputHandler.handle(keyStroke);
         renderer.update();
@@ -74,21 +69,30 @@ public class MenuManager {
         return Position.of(cursorX, 0);
     }
 
+    private boolean isItemSelectable(int itemIndex) {
+        return this.menuList.get(itemIndex).isSelectable();
+    }
+
     private void initInputActions() {
-        this.inputHandler.setKeyAction(KeyType.ESCAPE, this::exit);
-        this.inputHandler.setKeyAction(KeyType.ARROW_UP, () -> {
-            moveCursor(-1);
+        this.inputHandler.addKeyActions(
+                new KeyAction(KeyType.ENTER, () -> selectItem(cursor.getPosition())),
 
-            // :)
-            cursor.setCursorSymbol("<<<");
-        });
-        this.inputHandler.setKeyAction(KeyType.ARROW_DOWN, () -> {
-            moveCursor(1);
+                new KeyAction(KeyType.ESCAPE, this::exit),
 
-            // :)
-            cursor.setCursorSymbol(">>>");
-        });
-        this.inputHandler.setKeyAction(KeyType.ENTER, () -> selectItem(cursor.getPosition()));
+                new KeyAction(KeyType.ARROW_UP, () -> {
+                    moveCursor(-1);
+
+                    // :)
+                    cursor.setCursorSymbol("<<<");
+                }),
+
+                new KeyAction(KeyType.ARROW_DOWN, () -> {
+                    moveCursor(1);
+
+                    // :)
+                    cursor.setCursorSymbol(">>>");
+                })
+        );
     }
 
     private void moveCursor(int cursorMovement) {
@@ -111,14 +115,14 @@ public class MenuManager {
         menuItem.selectItem(new MenuContext(terminal, itemIdent, cursorPosition.getY()));
 
         if (menuItem.shouldExit()) {
-            isRunning = false;
+            exit();
         }
 
         update(UNKNOWN_KEY);
     }
 
-    private boolean isItemSelectable(int itemIndex) {
-        return this.menuList.get(itemIndex).isSelectable();
+    public void exit() {
+        this.isRunning = false;
     }
 
     @SuppressWarnings("unused")
