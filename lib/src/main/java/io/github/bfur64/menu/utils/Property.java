@@ -22,7 +22,7 @@ public class Property<T> implements AbstractProperty<T> {
     }
 
     private Property(Supplier<T> getter, Consumer<T> setter, List<Predicate<T>> validators, List<String> errors) {
-        this(getter, setter, validators, errors, s -> {
+        this(getter, setter, validators, errors, value -> {
             throw new UnsupportedOperationException("String conversion not available");
         });
     }
@@ -89,7 +89,7 @@ public class Property<T> implements AbstractProperty<T> {
         private Builder<T> create(T initialValue) {
             ValueHolder<T> holder = new ValueHolder<>(initialValue);
             getter = () -> holder.value;
-            setter = newValue -> { holder.value = newValue; };
+            setter = newValue -> holder.value = newValue;
             return this;
         }
 
@@ -122,10 +122,10 @@ public class Property<T> implements AbstractProperty<T> {
 
         public Property<T> build() {
             if (parser != null) {
-                return new Property<T>(getter, setter, validators, errors, parser);
+                return new Property<>(getter, setter, validators, errors, parser);
             }
 
-            return new Property<T>(getter, setter, validators, errors);
+            return new Property<>(getter, setter, validators, errors);
         }
 
         private static class ValueHolder<T> {
