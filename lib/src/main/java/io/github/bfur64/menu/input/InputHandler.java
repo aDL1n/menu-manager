@@ -24,7 +24,7 @@ public class InputHandler {
 
     public void handle(KeyStroke keyStroke) {
         actions.stream()
-                .filter(keyAction -> keyAction.keyStroke().equals(keyStroke))
-                .forEach(keyAction -> keyAction.action().execute());
+            .filter(keyAction -> keyAction.keyStroke().equals(keyStroke))
+            .forEach(keyAction -> keyAction.action().run());
     }
 }
