@@ -14,6 +14,9 @@ import java.util.function.Supplier;
 
 @NullMarked
 public class Property<T> implements AbstractProperty<T> {
+    private static final String NULL_PARSER_ERROR = "Parser is Null";
+    private static final String INVALID_INPUT_ERROR = "Invalid Input";
+
     private final Supplier<T> getter;
     private final Consumer<T> setter;
     private final @Nullable Function<String, @Nullable T> parser;
@@ -53,8 +56,8 @@ public class Property<T> implements AbstractProperty<T> {
     public void set(String value) {
         T parsed = parse(value);
 
-        if (parsed == null | !isValid(value)) { // Bitwise OR to ensure latestError is always set
-            throw new IllegalArgumentException(latestError);
+        if (parsed == null) {
+            throw new IllegalArgumentException(NULL_PARSER_ERROR);
         }
 
         setter.accept(parsed);
@@ -78,7 +81,7 @@ public class Property<T> implements AbstractProperty<T> {
         T parsed = parse(value);
 
         if (parsed == null) {
-            latestError = "Invalid Input";
+            latestError = NULL_PARSER_ERROR;
             return false;
         }
 
@@ -115,7 +118,7 @@ public class Property<T> implements AbstractProperty<T> {
 
         public Builder<T> require(Predicate<T> predicate) {
             validators.add(predicate);
-            errors.add("Invalid Input");
+            errors.add(INVALID_INPUT_ERROR);
             return this;
         }
 
