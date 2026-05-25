@@ -1,7 +1,6 @@
 package io.github.bfur64.menu;
 
 public class Position {
-
     private int x;
     private int y;
 

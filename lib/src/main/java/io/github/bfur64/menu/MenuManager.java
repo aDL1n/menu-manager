@@ -10,7 +10,6 @@ import io.github.bfur64.terminal.interfaces.TerminalBackend;
 import java.util.List;
 
 public class MenuManager {
-
     private static final KeyStroke UNKNOWN_KEY = new KeyStroke(KeyType.UNKNOWN);
 
     private final TerminalBackend terminal;
@@ -18,7 +17,7 @@ public class MenuManager {
     private final MenuRenderer renderer;
     private final InputHandler inputHandler;
 
-    private final int itemIdent;
+    private final int itemIndent;
     private final List<Item> menuList;
 
     private boolean isRunning = true;
@@ -28,13 +27,13 @@ public class MenuManager {
         this.menuList = menuList;
 
         final Position cursorPosition = initCursorPosition();
-        this.cursor = new MenuCursor(cursorPosition, ">>>");
+        cursor = new MenuCursor(cursorPosition, ">");
 
-        this.itemIdent = cursor.getCursorSymbol().length() + 2;
+        itemIndent = cursor.getCursorSymbol().length() + 2;
 
-        this.renderer = new MenuRenderer(terminal, menuList, cursor, itemIdent);
+        renderer = new MenuRenderer(terminal, menuList, cursor, itemIndent);
 
-        this.inputHandler = new InputHandler();
+        inputHandler = new InputHandler();
         initInputActions();
     }
 
@@ -53,7 +52,7 @@ public class MenuManager {
     }
 
     private void update(KeyStroke keyStroke) {
-        this.inputHandler.handle(keyStroke);
+        inputHandler.handle(keyStroke);
         renderer.update();
     }
 
@@ -70,28 +69,28 @@ public class MenuManager {
     }
 
     private boolean isItemSelectable(int itemIndex) {
-        return this.menuList.get(itemIndex).isSelectable();
+        return menuList.get(itemIndex).isSelectable();
     }
 
     private void initInputActions() {
-        this.inputHandler.addKeyActions(
-                new KeyAction(KeyType.ENTER, () -> selectItem(cursor.getPosition())),
+        inputHandler.addKeyActions(
+            new KeyAction(KeyType.ENTER, () -> selectItem(cursor.getPosition())),
 
-                new KeyAction(KeyType.ESCAPE, this::exit),
+            new KeyAction(KeyType.ESCAPE, this::exit),
 
-                new KeyAction(KeyType.ARROW_UP, () -> {
-                    moveCursor(-1);
+            new KeyAction(KeyType.ARROW_UP, () -> {
+                moveCursor(-1);
 
-                    // :)
-                    cursor.setCursorSymbol("<<<");
-                }),
+                // :)
+                cursor.setCursorSymbol("<");
+            }),
 
-                new KeyAction(KeyType.ARROW_DOWN, () -> {
-                    moveCursor(1);
+            new KeyAction(KeyType.ARROW_DOWN, () -> {
+                moveCursor(1);
 
-                    // :)
-                    cursor.setCursorSymbol(">>>");
-                })
+                // :)
+                cursor.setCursorSymbol(">");
+            })
         );
     }
 
@@ -112,7 +111,7 @@ public class MenuManager {
 
     private void selectItem(Position cursorPosition) {
         Item menuItem = menuList.get(cursorPosition.getY());
-        menuItem.selectItem(new MenuContext(terminal, itemIdent, cursorPosition.getY()));
+        menuItem.selectItem(new MenuContext(terminal, itemIndent, cursorPosition.getY()));
 
         if (menuItem.shouldExit()) {
             exit();
@@ -122,10 +121,9 @@ public class MenuManager {
     }
 
     public void exit() {
-        this.isRunning = false;
+        isRunning = false;
     }
 
-    @SuppressWarnings("unused")
     public static String getVersion() {
         return Config.VERSION;
     }

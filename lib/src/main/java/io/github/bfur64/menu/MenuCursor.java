@@ -9,16 +9,16 @@ public final class MenuCursor {
         this.cursorSymbol = cursorSymbol;
     }
 
-    public void setPosition(int x, int y) {
-        this.position = Position.of(x, y);
+    public Position getPosition() {
+        return position;
     }
 
     public void setPosition(Position position) {
         this.position = position;
     }
 
-    public Position getPosition() {
-        return this.position;
+    public void setPosition(int x, int y) {
+        position = Position.of(x, y);
     }
 
     public String getCursorSymbol() {

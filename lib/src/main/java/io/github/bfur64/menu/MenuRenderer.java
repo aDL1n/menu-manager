@@ -6,23 +6,18 @@ import io.github.bfur64.terminal.interfaces.TerminalBackend;
 import java.util.List;
 
 public class MenuRenderer {
-
     private final TerminalBackend terminal;
     private final List<Item> menuItems;
     private final MenuCursor cursor;
-    private final int itemIdent;
+    private final int itemIndent;
 
     private final int selectableItemCount;
 
-    public MenuRenderer(
-            TerminalBackend terminal,
-            List<Item> menuItems,
-            MenuCursor cursor,
-            int itemIdent) {
+    public MenuRenderer(TerminalBackend terminal, List<Item> menuItems, MenuCursor cursor, int itemIndent) {
         this.terminal = terminal;
         this.menuItems = menuItems;
         this.cursor = cursor;
-        this.itemIdent = itemIdent;
+        this.itemIndent = itemIndent;
 
         this.selectableItemCount = countSelectableItems(menuItems);
     }
@@ -38,7 +33,7 @@ public class MenuRenderer {
 
     private void drawMenu() {
         for (int i = 0; i < menuItems.size(); i++) {
-            terminal.put(itemIdent, i, menuItems.get(i).getDisplayName());
+            terminal.put(itemIndent, i, menuItems.get(i).getDisplayName());
         }
     }
 

@@ -16,7 +16,7 @@ public class ToggleItem extends Item {
 
     @Override
     public String getDisplayName() {
-        return (property.get() ? TOGGLE_ON : TOGGLE_OFF) + " " + displayName;
+        return (property.get() ? TOGGLE_ON : TOGGLE_OFF) + " " + name;
     }
 
     @Override

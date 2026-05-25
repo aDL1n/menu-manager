@@ -36,7 +36,7 @@ public class InputItem<T> extends Item {
 
     @Override
     public String getDisplayName() {
-        return super.getDisplayName() + separator + property.get() + " " + suffix;
+        return name + separator + property.get() + " " + suffix;
     }
 
     @Override
@@ -45,7 +45,7 @@ public class InputItem<T> extends Item {
         itemX = menuContext.itemX();
         itemY = menuContext.itemY();
 
-        int nameOffset = itemX + (displayName + separator).length();
+        int nameOffset = itemX + (name + separator).length();
 
         selectItemName();
         clearItemValueSuffix(nameOffset);
@@ -104,7 +104,7 @@ public class InputItem<T> extends Item {
     private void selectItemName() {
         terminal.setBackgroundColor(200, 200, 200);
         terminal.setForegroundColor(0, 0, 0);
-        terminal.put(itemX, itemY, displayName);
+        terminal.put(itemX, itemY, name);
         terminal.resetColorAndStyle();
     }
 

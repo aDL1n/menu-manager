@@ -3,22 +3,22 @@ package io.github.bfur64.menu.item;
 import io.github.bfur64.menu.MenuContext;
 
 public abstract class Item {
-    protected final String displayName;
+    protected final String name;
     protected final boolean isSelectable;
     protected boolean shouldExit;
 
-    protected Item(String displayName, boolean isSelectable) {
-        this(displayName, isSelectable, false);
+    protected Item(String name, boolean isSelectable) {
+        this(name, isSelectable, false);
     }
 
-    protected Item(String displayName, boolean isSelectable, boolean shouldExit) {
-        this.displayName = displayName;
+    protected Item(String name, boolean isSelectable, boolean shouldExit) {
+        this.name = name;
         this.isSelectable = isSelectable;
         this.shouldExit = shouldExit;
     }
 
     public String getDisplayName() {
-        return displayName;
+        return name;
     }
 
     public boolean isSelectable() {
