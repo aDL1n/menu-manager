@@ -2,7 +2,7 @@ package io.github.bfur64.menu.item;
 
 import io.github.bfur64.menu.MenuContext;
 
-public class Item {
+public abstract class Item {
     protected final String name;
     protected final boolean isSelectable;
     protected boolean shouldExit;

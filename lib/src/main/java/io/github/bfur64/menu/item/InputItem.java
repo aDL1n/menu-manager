@@ -36,7 +36,7 @@ public class InputItem<T> extends Item {
 
     @Override
     public String getDisplayName() {
-        return super.getDisplayName() + separator + property.get() + " " + suffix;
+        return name + separator + property.get() + " " + suffix;
     }
 
     @Override
