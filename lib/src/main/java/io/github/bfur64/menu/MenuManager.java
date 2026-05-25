@@ -93,10 +93,8 @@ public class MenuManager {
     }
 
     private void moveCursor(int cursorMovement) {
-        Position newCursorPosition = Position.of(cursor.getPosition());
-
-        int x = newCursorPosition.x();
-        int y = newCursorPosition.y();
+        int x = cursor.getPosition().x();
+        int y = cursor.getPosition().y();
 
         do {
             y += cursorMovement;
