@@ -26,7 +26,6 @@ public class MenuManager {
         this.terminal = terminal;
         this.menuList = menuList;
 
-//        final Position cursorPosition = initCursorPosition();
         cursor = new MenuCursor(initCursorPosition(), ">");
 
         itemIndent = cursor.getCursorSymbol().length() + 2;
@@ -41,9 +40,7 @@ public class MenuManager {
         update(UNKNOWN_KEY);
 
         while (isRunning) {
-            KeyStroke keyStroke = terminal.readInput();
-
-            update(keyStroke);
+            update(terminal.readInput());
         }
 
         terminal.clearScreen();

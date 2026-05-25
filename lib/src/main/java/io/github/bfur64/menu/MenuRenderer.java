@@ -45,7 +45,7 @@ public class MenuRenderer {
 
     private int countSelectableItems(List<Item> items) {
         return (int) items.stream()
-                .filter(Item::isSelectable)
-                .count();
+            .filter(Item::isSelectable)
+            .count();
     }
 }
