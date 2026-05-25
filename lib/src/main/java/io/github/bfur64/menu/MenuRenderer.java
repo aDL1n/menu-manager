@@ -40,7 +40,7 @@ public class MenuRenderer {
     private void drawCursor() {
         if (selectableItemCount == 0) return;
 
-        terminal.put(cursor.getPosition().getX(), cursor.getPosition().getY(), cursor.getCursorSymbol());
+        terminal.put(cursor.getPosition().x(), cursor.getPosition().y(), cursor.getCursorSymbol());
     }
 
     private int countSelectableItems(List<Item> items) {

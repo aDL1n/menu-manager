@@ -17,10 +17,6 @@ public final class MenuCursor {
         this.position = position;
     }
 
-    public void setPosition(int x, int y) {
-        position = Position.of(x, y);
-    }
-
     public String getCursorSymbol() {
         return cursorSymbol;
     }

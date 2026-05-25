@@ -26,8 +26,8 @@ public class MenuManager {
         this.terminal = terminal;
         this.menuList = menuList;
 
-        final Position cursorPosition = initCursorPosition();
-        cursor = new MenuCursor(cursorPosition, ">");
+//        final Position cursorPosition = initCursorPosition();
+        cursor = new MenuCursor(initCursorPosition(), ">");
 
         itemIndent = cursor.getCursorSymbol().length() + 2;
 
@@ -96,21 +96,26 @@ public class MenuManager {
     private void moveCursor(int cursorMovement) {
         Position newCursorPosition = Position.of(cursor.getPosition());
 
+        int x = newCursorPosition.x();
+        int y = newCursorPosition.y();
+
         do {
-            newCursorPosition.add(0, cursorMovement);
+            y += cursorMovement;
 
-            if (newCursorPosition.getY() < 0) newCursorPosition.setY(menuList.size() - 1);
-            if (newCursorPosition.getY() > menuList.size() - 1) newCursorPosition.setY(0);
+            if (y < 0) y = menuList.size() - 1;
 
-            if (newCursorPosition.getY() == cursor.getPosition().getY()) return;
-        } while (!menuList.get(newCursorPosition.getY()).isSelectable());
+            if (y > menuList.size() - 1) y = 0;
 
-        cursor.setPosition(newCursorPosition);
+            if (y == cursor.getPosition().y()) return;
+        }
+        while (!menuList.get(y).isSelectable());
+
+        cursor.setPosition(Position.of(x, y));
     }
 
     private void selectItem(Position cursorPosition) {
-        Item menuItem = menuList.get(cursorPosition.getY());
-        menuItem.selectItem(new MenuContext(terminal, itemIndent, cursorPosition.getY()));
+        Item menuItem = menuList.get(cursorPosition.y());
+        menuItem.selectItem(new MenuContext(terminal, itemIndent, cursorPosition.y()));
 
         if (menuItem.shouldExit()) {
             exit();
