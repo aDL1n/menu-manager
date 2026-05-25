@@ -1,13 +1,14 @@
 package io.github.bfur64.menu.input;
 
 import io.github.bfur64.terminal.input.KeyStroke;
+import org.jspecify.annotations.NullMarked;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+@NullMarked
 public class InputHandler {
-
     private final List<KeyAction> actions = new ArrayList<>();
 
     public void addKeyActions(List<KeyAction> keyActions) {

@@ -2,9 +2,11 @@ package io.github.bfur64.menu;
 
 import io.github.bfur64.menu.item.Item;
 import io.github.bfur64.terminal.interfaces.TerminalBackend;
+import org.jspecify.annotations.NullMarked;
 
 import java.util.List;
 
+@NullMarked
 public class MenuRenderer {
     private final TerminalBackend terminal;
     private final List<Item> menuItems;

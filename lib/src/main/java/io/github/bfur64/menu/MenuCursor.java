@@ -1,5 +1,8 @@
 package io.github.bfur64.menu;
 
+import org.jspecify.annotations.NullMarked;
+
+@NullMarked
 public final class MenuCursor {
     private Position position;
     private String cursorSymbol;

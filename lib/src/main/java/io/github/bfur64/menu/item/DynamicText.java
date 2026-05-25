@@ -1,7 +1,10 @@
 package io.github.bfur64.menu.item;
 
+import org.jspecify.annotations.NullMarked;
+
 import java.util.function.Supplier;
 
+@NullMarked
 public class DynamicText<T> extends Item {
     private final String suffix;
     private final Supplier<T> supplier;

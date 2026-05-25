@@ -5,15 +5,14 @@ import io.github.bfur64.menu.utils.Property;
 import io.github.bfur64.terminal.input.KeyStroke;
 import io.github.bfur64.terminal.input.KeyType;
 import io.github.bfur64.terminal.interfaces.TerminalBackend;
+import org.jspecify.annotations.NullMarked;
+import org.jspecify.annotations.Nullable;
 
+@NullMarked
 public class InputItem<T> extends Item {
     private final String separator;
     protected final Property<T> property;
     private final String suffix;
-
-    protected TerminalBackend terminal;
-    private int itemX;
-    private int itemY;
 
     public InputItem(String name, Property<T> property) {
         this(name, " = ", property);
@@ -41,20 +40,20 @@ public class InputItem<T> extends Item {
 
     @Override
     public void selectItem(MenuContext menuContext) {
-        terminal = menuContext.terminal();
-        itemX = menuContext.itemX();
-        itemY = menuContext.itemY();
+        TerminalBackend terminal = menuContext.terminal();
+        int itemX = menuContext.itemX();
+        int itemY = menuContext.itemY();
 
         int nameOffset = itemX + (name + separator).length();
 
-        selectItemName();
-        clearItemValueSuffix(nameOffset);
-        readUserInput(nameOffset);
+        selectItemName(terminal, itemX, itemY);
+        clearItemValueSuffix(terminal, itemY, nameOffset);
+        readUserInput(terminal, itemY, nameOffset);
 
         terminal.clearScreen();
     }
 
-    protected void readUserInput(int nameOffset) {
+    protected void readUserInput(TerminalBackend terminal, int itemY, int nameOffset) {
         StringBuilder builderOut = new StringBuilder();
         int cursorPos = nameOffset;
 
@@ -89,10 +88,10 @@ public class InputItem<T> extends Item {
                             break loop;
                         }
 
-                        throwUserError(nameOffset, property.getLatestError());
+                        throwUserError(terminal, itemY, nameOffset, property.getLatestError());
                     }
                     catch (IllegalArgumentException e) {
-                        throwUserError(nameOffset, "Unexpected Input");
+                        throwUserError(terminal, itemY, nameOffset, "Unexpected Input");
                     }
 
                     break loop;
@@ -101,14 +100,14 @@ public class InputItem<T> extends Item {
         }
     }
 
-    private void selectItemName() {
+    private void selectItemName(TerminalBackend terminal, int itemX, int itemY) {
         terminal.setBackgroundColor(200, 200, 200);
         terminal.setForegroundColor(0, 0, 0);
         terminal.put(itemX, itemY, name);
         terminal.resetColorAndStyle();
     }
 
-    private void clearItemValueSuffix(int nameOffset) {
+    private void clearItemValueSuffix(TerminalBackend terminal, int itemY, int nameOffset) {
         int valueSuffixLength = (separator + property.get() + " " + suffix).length();
 
         for (int i = 0; i <= valueSuffixLength; i++) {
@@ -116,7 +115,7 @@ public class InputItem<T> extends Item {
         }
     }
 
-    protected void throwUserError(int nameOffset, String lastErrorMessage) {
+    protected void throwUserError(TerminalBackend terminal, int itemY, int nameOffset, @Nullable String lastErrorMessage) {
         terminal.setForegroundColor(255, 70, 70);
         terminal.put(nameOffset, itemY, lastErrorMessage);
         terminal.resetColorAndStyle();

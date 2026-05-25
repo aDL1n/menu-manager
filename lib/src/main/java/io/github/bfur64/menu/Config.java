@@ -1,10 +1,12 @@
 package io.github.bfur64.menu;
 
+import org.jspecify.annotations.NullMarked;
 import tools.jackson.databind.JsonNode;
 import tools.jackson.databind.ObjectMapper;
 
 import java.io.InputStream;
 
+@NullMarked
 class Config {
     public static final String VERSION;
 

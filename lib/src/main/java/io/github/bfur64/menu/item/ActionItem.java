@@ -1,7 +1,9 @@
 package io.github.bfur64.menu.item;
 
 import io.github.bfur64.menu.MenuContext;
+import org.jspecify.annotations.NullMarked;
 
+@NullMarked
 public class ActionItem extends Item {
     private final Runnable action;
 
