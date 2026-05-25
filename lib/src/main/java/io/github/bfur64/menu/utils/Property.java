@@ -22,7 +22,7 @@ public class Property<T> implements AbstractProperty<T> {
     }
 
     private Property(Supplier<T> getter, Consumer<T> setter, List<Predicate<T>> validators, List<String> errors) {
-        this(getter, setter, validators, errors, value -> {
+        this(getter, setter, validators, errors, parser -> {
             throw new UnsupportedOperationException("String conversion not available");
         });
     }
