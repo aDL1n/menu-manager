@@ -37,8 +37,7 @@ public class MenuManager {
         initInputActions();
     }
 
-    //Maybe change to show
-    public void run() {
+    public void start() {
         update(UNKNOWN_KEY);
 
         while (isRunning) {
