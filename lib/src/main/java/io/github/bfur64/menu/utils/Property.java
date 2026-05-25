@@ -53,7 +53,7 @@ public class Property<T> implements AbstractProperty<T> {
     public void set(String value) {
         T parsed = parse(value);
 
-        if (parsed == null || !isValid(parsed)) {
+        if (parsed == null | !isValid(value)) { // Bitwise OR to ensure latestError is always set
             throw new IllegalArgumentException(latestError);
         }
 
