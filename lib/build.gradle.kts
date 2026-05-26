@@ -6,7 +6,7 @@
  */
 
 group = "io.github.bfur64"
-version = "0.7.0-SNAPSHOT"
+version = "0.7.0"
 
 tasks.processResources {
     val versionString = project.version.toString()
