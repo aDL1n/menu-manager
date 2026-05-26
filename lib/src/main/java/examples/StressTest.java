@@ -24,7 +24,7 @@ public class StressTest {
                     new ActionItem("[ Test 3 ]", test::test3),
                     new ActionItem("[ Test 4 ]", test::test4)
             ));
-            menu.run();
+            menu.start();
         }
     }
 
@@ -39,7 +39,7 @@ public class StressTest {
                 new StaticText("Text Only"),
                 new StaticText("Text Only")
         ));
-        menu.run();
+        menu.start();
     }
 
     private void test2() {
@@ -62,7 +62,7 @@ public class StressTest {
                 new StaticText("Text Only"),
                 new StaticText("Text Only")
         ));
-        menu.run();
+        menu.start();
     }
 
     private void test3() {
@@ -85,7 +85,7 @@ public class StressTest {
                 new StaticText("Text Only"),
                 new ActionItem("Action!", () -> {})
         ));
-        menu.run();
+        menu.start();
     }
 
     private void test4() {
@@ -109,6 +109,6 @@ public class StressTest {
                 new StaticText("Text Only"),
                 new ActionItem("Action!", () -> {})
         ));
-        menu.run();
+        menu.start();
     }
 }

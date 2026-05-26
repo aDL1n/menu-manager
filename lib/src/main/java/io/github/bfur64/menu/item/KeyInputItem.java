@@ -3,7 +3,10 @@ package io.github.bfur64.menu.item;
 import io.github.bfur64.menu.utils.Property;
 import io.github.bfur64.terminal.input.KeyStroke;
 import io.github.bfur64.terminal.input.KeyType;
+import io.github.bfur64.terminal.interfaces.TerminalBackend;
+import org.jspecify.annotations.NullMarked;
 
+@NullMarked
 public class KeyInputItem extends InputItem<KeyStroke> {
     public KeyInputItem(String name, Property<KeyStroke> property) {
         super(name, " = ", property);
@@ -22,12 +25,12 @@ public class KeyInputItem extends InputItem<KeyStroke> {
     }
 
     @Override
-    protected void readUserInput(int nameOffset) {
+    protected void readUserInput(TerminalBackend terminal, int itemY, int nameOffset) {
         while (true) {
             KeyStroke keyStroke = terminal.readInput();
 
             if (keyStroke.keyType() == KeyType.UNKNOWN) {
-                throwUserError(nameOffset, "Unknown Character!");
+                throwUserError(terminal, itemY, nameOffset, "Unknown Character!");
                 continue;
             }
 

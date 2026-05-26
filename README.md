@@ -10,9 +10,10 @@
   <img width="612" height="296" alt="" src="https://github.com/user-attachments/assets/82459d5a-0a77-45b0-9c9e-877d924a65a9" />
 </div>
 
-## Demo
-
-<img width="640" height="524" alt="" src="https://github.com/user-attachments/assets/f12e00a0-4743-4df6-a0f2-9ef731c8cbe1" />
+<div align="center">
+  <h2>Demo</h2>
+  <img width="640" height="524" alt="" src="https://github.com/user-attachments/assets/f12e00a0-4743-4df6-a0f2-9ef731c8cbe1" />
+</div>
 
 ## Quick Start
 
@@ -28,7 +29,7 @@ MenuManager menu = new MenuManager(terminal, List.of(
     new ToggleItem("Mute", Property.of(false).build()),
     new ActionItem("[ Save ]", () -> System.out.println("Saved!"))
 ));
-menu.run();
+menu.start();
 ```
 
 ## Installation / Running
@@ -67,7 +68,7 @@ List<Item> items = List.of(
 );
 
 MenuManager menu = new MenuManager(terminal, items);
-menu.run();
+menu.start();
 ```
 
 ### Properties & Validation
@@ -143,7 +144,7 @@ private void showMainMenu() {
         new ActionItem("[ Options ]", this::showOptionsMenu),
         new ActionItem("[ Exit ]", true)
     ));
-    menu.run();
+    menu.start();
 }
 
 private void showOptionsMenu() {
@@ -151,12 +152,12 @@ private void showOptionsMenu() {
         new InputItem<>("Volume", volumeProperty),
         new ActionItem("[ Back ]", true)  // Returns to main menu
     ));
-    menu.run();
+    menu.start();
     // Control returns here after submenu exits
 }
 ```
 
-Menus can stack. Calling `new MenuManager().run()` inside an `ActionItem` creates a submenu.
+Menus can stack. Calling `new MenuManager().start()` inside an `ActionItem` creates a submenu.
 
 ## Complete Examples
 
@@ -192,7 +193,7 @@ public static void main(String[] args) throws IOException {
             new ActionItem("[ Exit ]", true)
         ));
         
-        menu.run();
+        menu.start();
     }
 }
 

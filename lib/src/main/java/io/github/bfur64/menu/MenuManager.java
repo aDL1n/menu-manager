@@ -1,43 +1,48 @@
 package io.github.bfur64.menu;
 
+import io.github.bfur64.menu.input.InputHandler;
+import io.github.bfur64.menu.input.KeyAction;
 import io.github.bfur64.menu.item.Item;
 import io.github.bfur64.terminal.input.KeyStroke;
 import io.github.bfur64.terminal.input.KeyType;
 import io.github.bfur64.terminal.interfaces.TerminalBackend;
+import org.jspecify.annotations.NullMarked;
 
 import java.util.List;
 
+@NullMarked
 public class MenuManager {
-    private static final int ITEM_INDENT = 3;
+    private static final KeyStroke UNKNOWN_KEY = new KeyStroke(KeyType.UNKNOWN);
 
     private final TerminalBackend terminal;
-    private boolean isRunning = true;
+    private final MenuCursor cursor;
+    private final MenuRenderer renderer;
+    private final InputHandler inputHandler;
 
+    private final int itemIndent;
     private final List<Item> menuList;
 
-    private int cursorPos = 0;
-    private int prevCursorPos = cursorPos;
+    private boolean isRunning = true;
 
     public MenuManager(TerminalBackend terminal, List<Item> menuList) {
         this.terminal = terminal;
         this.menuList = menuList;
 
-        initCursor();
+        cursor = new MenuCursor(initCursorPosition(), ">");
+
+        itemIndent = cursor.getCursorSymbol().length() + 2;
+
+        renderer = new MenuRenderer(terminal, menuList, cursor, itemIndent);
+
+        inputHandler = new InputHandler();
+        initInputActions();
     }
 
-    public void run() {
-        terminal.clearScreen();
-        update();
-        terminal.flush();
+    public void start() {
+        update(UNKNOWN_KEY);
 
         while (isRunning) {
-            KeyStroke keyStroke = terminal.readInput();
-
-            terminal.clearScreen();
-
-            update(keyStroke);
-
-            terminal.flush();
+            update(terminal.readInput());
         }
 
         terminal.clearScreen();
@@ -45,78 +50,81 @@ public class MenuManager {
     }
 
     private void update(KeyStroke keyStroke) {
-        drawMenu();
-        drawCursor(keyStroke);
+        inputHandler.handle(keyStroke);
+        renderer.update();
     }
 
-    private void update() {
-        update(new KeyStroke(KeyType.UNKNOWN));
-    }
+    private Position initCursorPosition() {
+        final int cursorX = 1;
 
-    private void drawMenu() {
-        for (int i = 0; i < menuList.size(); i++) {
-            terminal.put(ITEM_INDENT, i, menuList.get(i).getDisplayName());
-        }
-    }
-
-    private void initCursor() {
-        for (int i = 0; i < menuList.size(); i++) {
-            if (menuList.get(i).isSelectable()) {
-                prevCursorPos = cursorPos;
-                cursorPos = i;
-                break;
+        for (int itemIndex = 0; itemIndex < menuList.size(); itemIndex++) {
+            if (isItemSelectable(itemIndex)) {
+                return Position.of(cursorX, itemIndex);
             }
         }
+
+        return Position.of(cursorX, 0);
     }
 
-    private void drawCursor(KeyStroke keyStroke) {
-        switch (keyStroke.keyType()) {
-            case ESCAPE -> isRunning = false;
-            case ARROW_UP -> moveCursor(-1);
-            case ARROW_DOWN -> moveCursor(+1);
-            case ENTER -> selectItem();
-        }
+    private boolean isItemSelectable(int itemIndex) {
+        return menuList.get(itemIndex).isSelectable();
+    }
 
-        int selectable = 0;
-        for (Item item : menuList) {
-            if (item.isSelectable()) selectable++;
-        }
+    private void initInputActions() {
+        inputHandler.addKeyActions(
+            new KeyAction(KeyType.ENTER, () -> selectItem(cursor.getPosition())),
 
-        if (selectable == 0) return;
+            new KeyAction(KeyType.ESCAPE, this::exit),
 
-        terminal.put(0, prevCursorPos, " ");
-        terminal.put(0, cursorPos, ">");
+            new KeyAction(KeyType.ARROW_UP, () -> {
+                moveCursor(-1);
+
+                // :)
+                cursor.setCursorSymbol("<");
+            }),
+
+            new KeyAction(KeyType.ARROW_DOWN, () -> {
+                moveCursor(1);
+
+                // :)
+                cursor.setCursorSymbol(">");
+            })
+        );
     }
 
     private void moveCursor(int cursorMovement) {
-        int newCursorPos = cursorPos;
+        int x = cursor.getPosition().x();
+        int y = cursor.getPosition().y();
 
         do {
-            newCursorPos += cursorMovement;
+            y += cursorMovement;
 
-            if (newCursorPos < 0) newCursorPos = menuList.size() - 1;
-            if (newCursorPos > menuList.size() - 1) newCursorPos = 0;
+            if (y < 0) y = menuList.size() - 1;
 
-            if (newCursorPos == cursorPos) return;
+            if (y > menuList.size() - 1) y = 0;
+
+            if (y == cursor.getPosition().y()) return;
         }
-        while(!menuList.get(newCursorPos).isSelectable());
+        while (!menuList.get(y).isSelectable());
 
-        prevCursorPos = cursorPos;
-        cursorPos = newCursorPos;
+        cursor.setPosition(Position.of(x, y));
     }
 
-    private void selectItem() {
-        Item menuItem = menuList.get(cursorPos);
-        menuItem.selectItem(new MenuContext(terminal, ITEM_INDENT, cursorPos));
+    private void selectItem(Position cursorPosition) {
+        Item menuItem = menuList.get(cursorPosition.y());
+        menuItem.selectItem(new MenuContext(terminal, itemIndent, cursorPosition.y()));
 
         if (menuItem.shouldExit()) {
-            isRunning = false;
+            exit();
         }
 
-        update();
+        update(UNKNOWN_KEY);
     }
 
-    @SuppressWarnings("unused")
+    public void exit() {
+        isRunning = false;
+    }
+
     public static String getVersion() {
         return Config.VERSION;
     }

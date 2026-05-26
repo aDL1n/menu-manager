@@ -2,7 +2,9 @@ package io.github.bfur64.menu.item;
 
 import io.github.bfur64.menu.MenuContext;
 import io.github.bfur64.menu.utils.Property;
+import org.jspecify.annotations.NullMarked;
 
+@NullMarked
 public class ToggleItem extends Item {
     private static final String TOGGLE_ON = "■";
     private static final String TOGGLE_OFF = "□";

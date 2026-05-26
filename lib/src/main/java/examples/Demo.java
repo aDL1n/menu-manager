@@ -27,7 +27,7 @@ public class Demo {
 
             MenuManager menu = new MenuManager(terminal, items);
 
-            menu.run();
+            menu.start();
         }
         catch (Exception e) {
             e.printStackTrace();

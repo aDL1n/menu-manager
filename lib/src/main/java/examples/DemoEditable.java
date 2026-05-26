@@ -42,7 +42,7 @@ public class DemoEditable {
                 new ActionItem("[ Exit ]", true)
             ));
             
-            menu.run();
+            menu.start();
         }
     }
 
@@ -65,7 +65,7 @@ public class DemoEditable {
             config.age.set(newAge);
         }
 
-        menu.run();
+        menu.start();
     }
 }
 
