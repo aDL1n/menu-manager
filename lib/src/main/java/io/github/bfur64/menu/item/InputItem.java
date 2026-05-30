@@ -9,7 +9,8 @@ import org.jspecify.annotations.NullMarked;
 import org.jspecify.annotations.Nullable;
 
 @NullMarked
-public class InputItem<T> extends Item {
+public class InputItem<T> extends SelectableItem {
+
     private final String separator;
     protected final Property<T> property;
     private final String suffix;
@@ -27,7 +28,7 @@ public class InputItem<T> extends Item {
     }
 
     public InputItem(String name, String separator, Property<T> property, String suffix) {
-        super(name, true);
+        super(name);
         this.separator = separator;
         this.property = property;
         this.suffix = suffix;
@@ -39,10 +40,10 @@ public class InputItem<T> extends Item {
     }
 
     @Override
-    public void selectItem(MenuContext menuContext) {
-        TerminalBackend terminal = menuContext.terminal();
-        int itemX = menuContext.itemX();
-        int itemY = menuContext.itemY();
+    public void select(MenuContext context) {
+        TerminalBackend terminal = context.menu().getTerminal();
+        int itemX = context.itemX();
+        int itemY = context.itemY();
 
         int nameOffset = itemX + (name + separator).length();
 

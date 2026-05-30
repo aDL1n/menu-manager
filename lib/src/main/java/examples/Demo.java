@@ -18,9 +18,9 @@ public class Demo {
             List<Item> items = List.of(
                 new StaticText("<< Some Kinda Title >>"),
                 new LineBreak(),
-                new ActionItem("Start", () -> {}),
-                new ActionItem("About", () -> {}),
-                new ActionItem("Exit", () -> {}, true),
+                new ActionItem("Start", context -> {}),
+                new ActionItem("About", context -> {}),
+                new ActionItem("Exit", context -> {}),
                 new LineBreak(),
                 new StaticText("    This is so FUCKED!!!")
             );

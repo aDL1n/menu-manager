@@ -4,7 +4,8 @@ import org.jspecify.annotations.NullMarked;
 
 @NullMarked
 public class StaticText extends Item {
+
     public StaticText(String name) {
-        super(name, false);
+        super(name);
     }
 }

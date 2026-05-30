@@ -10,7 +10,11 @@ import java.util.Arrays;
 
 @NullMarked
 class Config {
+
     public static final String VERSION;
+
+    private Config() {
+    }
 
     static {
         String version;

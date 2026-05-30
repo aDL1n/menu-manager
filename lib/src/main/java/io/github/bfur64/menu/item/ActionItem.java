@@ -3,25 +3,20 @@ package io.github.bfur64.menu.item;
 import io.github.bfur64.menu.MenuContext;
 import org.jspecify.annotations.NullMarked;
 
+import java.util.function.Consumer;
+
 @NullMarked
-public class ActionItem extends Item {
-    private final Runnable action;
+public class ActionItem extends SelectableItem {
 
-    public ActionItem(String name, Runnable action) {
-        this(name, action, false);
-    }
+    private final Consumer<MenuContext> action;
 
-    public ActionItem(String name, boolean shouldExit) {
-        this(name, () -> {}, shouldExit);
-    }
-
-    public ActionItem(String name, Runnable action, boolean shouldExit) {
-        super(name, true, shouldExit);
+    public ActionItem(String name, Consumer<MenuContext> action) {
+        super(name);
         this.action = action;
     }
 
     @Override
-    public void selectItem(MenuContext menuContext) {
-        action.run();
+    public void select(MenuContext context) {
+        action.accept(context);
     }
 }

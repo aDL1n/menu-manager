@@ -3,6 +3,7 @@ package io.github.bfur64.menu;
 import io.github.bfur64.menu.input.InputHandler;
 import io.github.bfur64.menu.input.KeyAction;
 import io.github.bfur64.menu.item.Item;
+import io.github.bfur64.menu.item.SelectableItem;
 import io.github.bfur64.terminal.input.KeyStroke;
 import io.github.bfur64.terminal.input.KeyType;
 import io.github.bfur64.terminal.interfaces.TerminalBackend;
@@ -67,7 +68,7 @@ public class MenuManager {
     }
 
     private boolean isItemSelectable(int itemIndex) {
-        return menuList.get(itemIndex).isSelectable();
+        return menuList.get(itemIndex) instanceof SelectableItem;
     }
 
     private void initInputActions() {
@@ -79,14 +80,12 @@ public class MenuManager {
             new KeyAction(KeyType.ARROW_UP, () -> {
                 moveCursor(-1);
 
-                // :)
                 cursor.setCursorSymbol("<");
             }),
 
             new KeyAction(KeyType.ARROW_DOWN, () -> {
                 moveCursor(1);
 
-                // :)
                 cursor.setCursorSymbol(">");
             })
         );
@@ -105,18 +104,16 @@ public class MenuManager {
 
             if (y == cursor.getPosition().y()) return;
         }
-        while (!menuList.get(y).isSelectable());
+        while (!(menuList.get(y) instanceof SelectableItem));
 
         cursor.setPosition(Position.of(x, y));
     }
 
     private void selectItem(Position cursorPosition) {
-        Item menuItem = menuList.get(cursorPosition.y());
-        menuItem.selectItem(new MenuContext(terminal, itemIndent, cursorPosition.y()));
+        if (!(menuList.get(cursorPosition.y()) instanceof SelectableItem selectableItem))
+            return;
 
-        if (menuItem.shouldExit()) {
-            exit();
-        }
+        selectableItem.select(new MenuContext(this, itemIndent, cursorPosition.y()));
 
         update(UNKNOWN_KEY);
     }
@@ -127,5 +124,9 @@ public class MenuManager {
 
     public static String getVersion() {
         return Config.VERSION;
+    }
+
+    public TerminalBackend getTerminal() {
+        return terminal;
     }
 }

@@ -24,7 +24,7 @@ public class DemoEditable {
                 new StaticText(terminal.getTerminalInfo()),
                 new StaticText(Terminal.getLibraryInfo()),
                 new LineBreak(),
-                new ActionItem("[ Check Credentials ]", () -> startGame(config, terminal)),
+                new ActionItem("[ Check Credentials ]", context -> startGame(config, terminal)),
                 new LineBreak(),
                 new InputItem<>("Name", ": ", config.username),
                 new InputItem<>("Age", ": ", config.age),
@@ -39,7 +39,7 @@ public class DemoEditable {
                 new DynamicText<>("Dynamic Allowance = ", "PHP", config.allowance::get),
                 new DynamicText<>("Drop Block Key: ", config.allowance::get),
                 new LineBreak(),
-                new ActionItem("[ Exit ]", true)
+                new ActionItem("[ Exit ]", context -> context.menu().exit())
             ));
             
             menu.start();
@@ -55,7 +55,7 @@ public class DemoEditable {
                 new StaticText("Allowance: " + config.allowance.get()),
                 new StaticText("Admin: " + config.admin.get()),
                 new LineBreak(),
-                new ActionItem("[ Return ]", true)
+                new ActionItem("[ Return ]", context -> context.menu().exit())
         ));
 
         int age = config.age.get();

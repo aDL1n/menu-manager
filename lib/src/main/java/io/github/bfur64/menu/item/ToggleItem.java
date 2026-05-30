@@ -5,14 +5,15 @@ import io.github.bfur64.menu.utils.Property;
 import org.jspecify.annotations.NullMarked;
 
 @NullMarked
-public class ToggleItem extends Item {
+public class ToggleItem extends SelectableItem {
+
     private static final String TOGGLE_ON = "■";
     private static final String TOGGLE_OFF = "□";
 
     private final Property<Boolean> property;
 
     public ToggleItem(String name, Property<Boolean> property) {
-        super(name, true);
+        super(name);
         this.property = property;
     }
 
@@ -22,7 +23,7 @@ public class ToggleItem extends Item {
     }
 
     @Override
-    public void selectItem(MenuContext menuContext) {
+    public void select(MenuContext context) {
         property.set(!property.get());
     }
 }
