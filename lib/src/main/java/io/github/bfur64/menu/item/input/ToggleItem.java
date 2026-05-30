@@ -1,5 +1,6 @@
-package io.github.bfur64.menu.item;
+package io.github.bfur64.menu.item.input;
 
+import io.github.bfur64.menu.item.Item;
 import io.github.bfur64.menu.utils.Property;
 import org.jspecify.annotations.NullMarked;
 

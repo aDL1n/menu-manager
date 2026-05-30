@@ -1,7 +1,13 @@
 package examples;
 
 import io.github.bfur64.menu.MenuManager;
-import io.github.bfur64.menu.item.*;
+import io.github.bfur64.menu.item.ActionItem;
+import io.github.bfur64.menu.item.display.DynamicText;
+import io.github.bfur64.menu.item.display.LineBreak;
+import io.github.bfur64.menu.item.display.StaticText;
+import io.github.bfur64.menu.item.input.InputItem;
+import io.github.bfur64.menu.item.input.KeyInputItem;
+import io.github.bfur64.menu.item.input.ToggleItem;
 import io.github.bfur64.menu.utils.Property;
 import io.github.bfur64.terminal.Terminal;
 import io.github.bfur64.terminal.input.KeyStroke;

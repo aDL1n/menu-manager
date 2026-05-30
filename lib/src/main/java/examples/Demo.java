@@ -2,8 +2,8 @@ package examples;
 
 import io.github.bfur64.menu.MenuManager;
 import io.github.bfur64.menu.item.ActionItem;
-import io.github.bfur64.menu.item.LineBreak;
-import io.github.bfur64.menu.item.StaticText;
+import io.github.bfur64.menu.item.display.LineBreak;
+import io.github.bfur64.menu.item.display.StaticText;
 import io.github.bfur64.menu.item.Item;
 import io.github.bfur64.terminal.Terminal;
 import io.github.bfur64.terminal.interfaces.TerminalBackend;
