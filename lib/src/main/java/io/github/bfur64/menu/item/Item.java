@@ -30,7 +30,5 @@ public abstract class Item {
         return shouldExit;
     }
 
-    public void selectItem() {
-
-    }
+    public void selectItem() {}
 }
