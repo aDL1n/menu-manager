@@ -1,6 +1,5 @@
 package io.github.bfur64.menu.item;
 
-import io.github.bfur64.menu.MenuContext;
 import io.github.bfur64.menu.utils.Property;
 import org.jspecify.annotations.NullMarked;
 
@@ -22,7 +21,7 @@ public class ToggleItem extends Item {
     }
 
     @Override
-    public void selectItem(MenuContext menuContext) {
+    public void selectItem() {
         property.set(!property.get());
     }
 }
