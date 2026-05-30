@@ -181,6 +181,8 @@ class GameConfig {
 // 2. Build your menu
 public static void main(String[] args) throws IOException {
     try (Terminal terminal = Terminal.auto()) {
+        terminal.start();
+
         MenuManager menu = new MenuManager(terminal, List.of(
             new LineBreak(),
             new StaticText("== Game Settings =="),
