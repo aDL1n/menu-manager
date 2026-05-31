@@ -4,6 +4,7 @@ import io.github.bfur64.menu.input.InputHandler;
 import io.github.bfur64.menu.item.Item;
 import io.github.bfur64.menu.utils.ErrorEvent;
 import io.github.bfur64.menu.utils.ErrorListener;
+import io.github.bfur64.menu.utils.ErrorObservable;
 import io.github.bfur64.menu.utils.Position;
 import io.github.bfur64.terminal.input.KeyStroke;
 import io.github.bfur64.terminal.input.KeyType;
@@ -33,7 +34,9 @@ public class MenuManager implements InputHandler, ErrorListener {
         this.menuList = menuList;
 
         for (Item item : menuList) {
-            item.setErrorListener(this);
+            if (item instanceof ErrorObservable observableItem) {
+                observableItem.setErrorListener(this);
+            }
         }
 
         cursor = new MenuCursor(initCursorPosition(), ">");
