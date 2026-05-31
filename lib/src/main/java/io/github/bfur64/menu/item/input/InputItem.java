@@ -4,15 +4,19 @@ import io.github.bfur64.menu.input.InputHandler;
 import io.github.bfur64.menu.item.Item;
 import io.github.bfur64.menu.utils.ErrorEvent;
 import io.github.bfur64.menu.Property;
+import io.github.bfur64.menu.utils.ErrorListener;
+import io.github.bfur64.menu.utils.ErrorObservable;
 import io.github.bfur64.terminal.input.KeyStroke;
 import io.github.bfur64.terminal.input.KeyType;
 import org.jspecify.annotations.NullMarked;
+import org.jspecify.annotations.Nullable;
 
 @NullMarked
-public class InputItem<T> extends Item implements InputHandler {
+public class InputItem<T> extends Item implements InputHandler, ErrorObservable {
     private final String separator;
     protected final Property<T> property;
     private final String suffix;
+    protected @Nullable ErrorListener errorListener;
 
     protected String value;
     protected boolean isFinished;
@@ -93,5 +97,9 @@ public class InputItem<T> extends Item implements InputHandler {
     @Override
     public boolean isFinished() {
         return isFinished;
+    }
+
+    public void setErrorListener(ErrorListener errorListener) {
+        this.errorListener = errorListener;
     }
 }
