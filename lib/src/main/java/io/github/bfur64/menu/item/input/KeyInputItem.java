@@ -1,5 +1,6 @@
 package io.github.bfur64.menu.item.input;
 
+import io.github.bfur64.menu.utils.ErrorEvent;
 import io.github.bfur64.menu.utils.Property;
 import io.github.bfur64.terminal.input.KeyStroke;
 import io.github.bfur64.terminal.input.KeyType;
@@ -26,7 +27,10 @@ public class KeyInputItem extends InputItem<KeyStroke> {
     @Override
     public void handle(KeyStroke keyStroke) {
         if (keyStroke.keyType() == KeyType.UNKNOWN) {
-            // TODO Throw User Error
+            if (errorListener != null) {
+                errorListener.onError(new ErrorEvent("Unknown Key"));
+            }
+
             value = property.get().toString();
             isFinished = true;
             return;

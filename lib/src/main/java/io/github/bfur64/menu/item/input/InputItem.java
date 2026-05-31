@@ -2,6 +2,7 @@ package io.github.bfur64.menu.item.input;
 
 import io.github.bfur64.menu.input.InputHandler;
 import io.github.bfur64.menu.item.Item;
+import io.github.bfur64.menu.utils.ErrorEvent;
 import io.github.bfur64.menu.utils.Property;
 import io.github.bfur64.terminal.input.KeyStroke;
 import io.github.bfur64.terminal.input.KeyType;
@@ -70,11 +71,17 @@ public class InputItem<T> extends Item implements InputHandler {
                         break;
                     }
 
-                    // TODO Throw User Error
+                    if (errorListener != null && property.getLatestError() != null) {
+                        errorListener.onError(new ErrorEvent(property.getLatestError()));
+                    }
+
                     value = property.get().toString();
                 }
                 catch (IllegalArgumentException e) {
-                    // TODO Throw User Error
+                    if (errorListener != null) {
+                        errorListener.onError(new ErrorEvent("Unexpected Input"));
+                    }
+
                     value = property.get().toString();
                 }
 

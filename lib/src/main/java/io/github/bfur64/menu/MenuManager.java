@@ -2,6 +2,8 @@ package io.github.bfur64.menu;
 
 import io.github.bfur64.menu.input.InputHandler;
 import io.github.bfur64.menu.item.Item;
+import io.github.bfur64.menu.utils.ErrorEvent;
+import io.github.bfur64.menu.utils.ErrorListener;
 import io.github.bfur64.terminal.input.KeyStroke;
 import io.github.bfur64.terminal.input.KeyType;
 import io.github.bfur64.terminal.interfaces.TerminalBackend;
@@ -11,7 +13,7 @@ import org.jspecify.annotations.Nullable;
 import java.util.List;
 
 @NullMarked
-public class MenuManager implements InputHandler {
+public class MenuManager implements InputHandler, ErrorListener {
     private static final KeyStroke UNKNOWN_KEY = new KeyStroke(KeyType.UNKNOWN);
 
     private final TerminalBackend terminal;
@@ -22,12 +24,17 @@ public class MenuManager implements InputHandler {
     private final List<Item> menuList;
 
     private @Nullable Item itemSelected;
+    private @Nullable Popup popup;
 
     private boolean isRunning = true;
 
     public MenuManager(TerminalBackend terminal, List<Item> menuList) {
         this.terminal = terminal;
         this.menuList = menuList;
+
+        for (Item item : menuList) {
+            item.setErrorListener(this);
+        }
 
         cursor = new MenuCursor(initCursorPosition(), ">");
 
@@ -57,6 +64,14 @@ public class MenuManager implements InputHandler {
 
             if (inputItem.isFinished()) {
                 itemSelected = null;
+            }
+        }
+        else if (popup != null && !popup.isFinished()) {
+            popup.handle(keyStroke);
+
+            if (popup.isFinished()) {
+                popup = null;
+                renderer.setPopup(null);
             }
         }
         else {
@@ -132,5 +147,11 @@ public class MenuManager implements InputHandler {
 
     public static String getVersion() {
         return Config.VERSION;
+    }
+
+    @Override
+    public void onError(ErrorEvent errorEvent) {
+        popup = new Popup(terminal, errorEvent.error());
+        renderer.setPopup(popup);
     }
 }
