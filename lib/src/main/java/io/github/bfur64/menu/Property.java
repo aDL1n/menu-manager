@@ -1,5 +1,6 @@
-package io.github.bfur64.menu.utils;
+package io.github.bfur64.menu;
 
+import io.github.bfur64.menu.utils.AbstractProperty;
 import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.NullMarked;
 import org.jspecify.annotations.NullUnmarked;

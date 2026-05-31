@@ -4,6 +4,7 @@ import io.github.bfur64.menu.input.InputHandler;
 import io.github.bfur64.menu.item.Item;
 import io.github.bfur64.menu.utils.ErrorEvent;
 import io.github.bfur64.menu.utils.ErrorListener;
+import io.github.bfur64.menu.utils.Position;
 import io.github.bfur64.terminal.input.KeyStroke;
 import io.github.bfur64.terminal.input.KeyType;
 import io.github.bfur64.terminal.interfaces.TerminalBackend;

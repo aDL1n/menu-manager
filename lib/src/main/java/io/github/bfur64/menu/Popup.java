@@ -1,6 +1,8 @@
 package io.github.bfur64.menu;
 
 import io.github.bfur64.menu.input.InputHandler;
+import io.github.bfur64.menu.utils.Position;
+import io.github.bfur64.menu.utils.Size;
 import io.github.bfur64.terminal.input.KeyStroke;
 import io.github.bfur64.terminal.input.KeyType;
 import io.github.bfur64.terminal.interfaces.TerminalBackend;
