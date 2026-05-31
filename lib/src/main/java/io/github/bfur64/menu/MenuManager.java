@@ -20,7 +20,6 @@ public class MenuManager implements InputHandler, ErrorListener {
     private final MenuCursor cursor;
     private final MenuRenderer renderer;
 
-    private final int itemIndent;
     private final List<Item> menuList;
 
     private @Nullable Item itemSelected;
@@ -38,8 +37,7 @@ public class MenuManager implements InputHandler, ErrorListener {
 
         cursor = new MenuCursor(initCursorPosition(), ">");
 
-        itemIndent = cursor.getCursorSymbol().length() + 2;
-
+        int itemIndent = cursor.getCursorSymbol().length() + 2;
         renderer = new MenuRenderer(terminal, menuList, cursor, itemIndent);
     }
 
