@@ -52,7 +52,7 @@ dependencies {
     implementation(libs.guava)
 
     // Rendering Pipeline
-    implementation("io.github.bfur64:tetrue-terminal:2.2.1")
+    implementation("io.github.bfur64:tetrue-terminal:2.3.0")
 
     // JSON Reader
     implementation("tools.jackson.core:jackson-databind:3.1.3")

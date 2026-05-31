@@ -9,6 +9,7 @@ import io.github.bfur64.menu.item.input.InputItem;
 import io.github.bfur64.menu.item.input.KeyInputItem;
 import io.github.bfur64.menu.item.input.ToggleItem;
 import io.github.bfur64.menu.Property;
+import io.github.bfur64.terminal.BufferedTerminal;
 import io.github.bfur64.terminal.Terminal;
 import io.github.bfur64.terminal.input.KeyStroke;
 import io.github.bfur64.terminal.input.KeyType;
@@ -19,7 +20,7 @@ import java.util.List;
 
 public class DemoEditable {
     public static void main(String[] args) throws IOException {
-        try (TerminalBackend terminal = Terminal.auto()) {
+        try (TerminalBackend terminal = BufferedTerminal.auto()) {
             terminal.start();
             Config config = new Config();
 
