@@ -1,5 +1,6 @@
 package io.github.bfur64.menu;
 
+import io.github.bfur64.menu.utils.Position;
 import org.jspecify.annotations.NullMarked;
 
 @NullMarked
