@@ -12,7 +12,7 @@
 
 <div align="center">
   <h2>Demo</h2>
-  <img width="640" height="524" alt="" src="https://github.com/user-attachments/assets/f12e00a0-4743-4df6-a0f2-9ef731c8cbe1" />
+  <img width="640" height="476" alt="ezgif-76173d48fdbe0ee6" src="https://github.com/user-attachments/assets/6e174d55-eaf4-4a37-86e0-3ef775cf8496" />
 </div>
 
 ## Quick Start
