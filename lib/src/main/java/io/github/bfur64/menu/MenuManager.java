@@ -80,7 +80,16 @@ public class MenuManager implements InputHandler, ErrorListener {
             handle(keyStroke);
         }
 
+        syncHighlightedItem();
         renderer.update();
+    }
+
+    private void syncHighlightedItem() {
+        if (itemSelected instanceof InputHandler && !((InputHandler) itemSelected).isFinished()) {
+            renderer.setHighlightedItem(itemSelected);
+        } else {
+            renderer.setHighlightedItem(null);
+        }
     }
 
     @Override

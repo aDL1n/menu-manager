@@ -18,6 +18,10 @@ public abstract class Item {
         this.shouldExit = shouldExit;
     }
 
+    public String getName() {
+        return name;
+    }
+
     public String getDisplayName() {
         return name;
     }
