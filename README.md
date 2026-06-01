@@ -180,7 +180,7 @@ class GameConfig {
 
 // 2. Build your menu
 public static void main(String[] args) throws IOException {
-    try (Terminal terminal = Terminal.auto()) {
+    try (TerminalBackend terminal = BufferedTerminal.auto()) {
         terminal.start();
 
         MenuManager menu = new MenuManager(terminal, List.of(
@@ -200,7 +200,7 @@ public static void main(String[] args) throws IOException {
 }
 
 // 3. Use the validated config in your game
-private static void startGame(Terminal terminal) {
+private static void startGame(TerminalBackend terminal) {
     int difficulty = GameConfig.difficulty.get();  // Guaranteed valid
     KeyStroke jump = GameConfig.jumpKey.get();
     
