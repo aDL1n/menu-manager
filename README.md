@@ -341,11 +341,11 @@ If parsing fails (e.g., user types "abc" for an `Integer` property), the default
 
 - **Single-threaded rendering**: The menu blocks the main thread during `run()`
 - **No mouse support**: Keyboard navigation only (arrow keys, Enter, Escape)
-- **Full screen redraws**: Every input triggers `clearScreen()` (works for small menus)
 - **No scrolling**: All menu items must fit on screen simultaneously
 - **Static item lists**: Menu structure is immutable after construction (use `DynamicText` for updating values)
 - **Terminal dependent**: Requires ANSI color support and proper keystroke detection
 - **No nested validation**: Property validators are single-level predicates
+- **Blocking Refresh**: Needs an update from `MenuManager` (or `MenuRenderer`) to re-render the new state
 
 ## Requirements
 
