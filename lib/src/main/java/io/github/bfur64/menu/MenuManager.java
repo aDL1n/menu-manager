@@ -139,8 +139,6 @@ public class MenuManager implements InputHandler, ErrorListener {
 
         menuItem.selectItem();
         itemSelected = menuItem;
-
-        update(UNKNOWN_KEY);
     }
 
     public void exit() {
