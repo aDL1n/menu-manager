@@ -85,7 +85,7 @@ public class MenuManager implements InputHandler, ErrorListener {
     }
 
     private void syncHighlightedItem() {
-        if (itemSelected instanceof InputHandler && !((InputHandler) itemSelected).isFinished()) {
+        if (itemSelected instanceof InputHandler inputItem && !inputItem.isFinished()) {
             renderer.setHighlightedItem(itemSelected);
         } else {
             renderer.setHighlightedItem(null);
