@@ -1,6 +1,7 @@
 package examples;
 
 import io.github.bfur64.menu.MenuManager;
+import io.github.bfur64.menu.Property;
 import io.github.bfur64.menu.item.ActionItem;
 import io.github.bfur64.menu.item.display.DynamicText;
 import io.github.bfur64.menu.item.display.LineBreak;
@@ -8,93 +9,144 @@ import io.github.bfur64.menu.item.display.StaticText;
 import io.github.bfur64.menu.item.input.InputItem;
 import io.github.bfur64.menu.item.input.KeyInputItem;
 import io.github.bfur64.menu.item.input.ToggleItem;
-import io.github.bfur64.menu.Property;
 import io.github.bfur64.terminal.BufferedTerminal;
 import io.github.bfur64.terminal.Terminal;
 import io.github.bfur64.terminal.input.KeyStroke;
 import io.github.bfur64.terminal.input.KeyType;
 import io.github.bfur64.terminal.interfaces.TerminalBackend;
 
-import java.io.IOException;
+import java.util.Arrays;
 import java.util.List;
 
 public class DemoEditable {
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) {
         try (TerminalBackend terminal = BufferedTerminal.auto()) {
             terminal.start();
-            Config config = new Config();
 
             MenuManager menu = new MenuManager(terminal, List.of(
-                new StaticText("Editing Test"),
-                new StaticText("Menu Manager: " + MenuManager.getVersion()),
-                new StaticText("Renderer: " + terminal.getTerminalInfo()),
-                new StaticText(terminal.getTerminalInfo()),
+                new LineBreak(),
+                new StaticText("<< Demo Editable >>"),
+                new LineBreak(),
+                new StaticText("| Static Text |"),
+                new LineBreak(),
+                new StaticText(MenuManager.getVersion()),
                 new StaticText(Terminal.getLibraryInfo()),
+                new StaticText(terminal.getTerminalInfo()),
                 new LineBreak(),
-                new ActionItem("[ Check Credentials ]", () -> startGame(config, terminal)),
+                new StaticText("| Dynamic Text |"),
                 new LineBreak(),
-                new InputItem<>("Name", ": ", config.username),
-                new InputItem<>("Age", ": ", config.age),
-                new InputItem<>("Allowance", " = ", config.allowance, "Pesos"),
-                new ToggleItem("Admin", config.admin),
-                new KeyInputItem("Read Key", config.dropBlock),
+                new DynamicText<>("Col: ", terminal::getXSize),
+                new DynamicText<>("Row: ", terminal::getYSize),
                 new LineBreak(),
-                new StaticText("  | Dynamic Text |"),
+                new ActionItem("[ Input Test ]", () -> DemoEditable.inputTest(terminal)),
                 new LineBreak(),
-                new DynamicText<>("Dynamic Name : ", config.username::get),
-                new DynamicText<>("Dynamic Age: ", config.age::get),
-                new DynamicText<>("Dynamic Allowance = ", "PHP", config.allowance::get),
-                new DynamicText<>("Drop Block Key: ", config.allowance::get),
+                new KeyInputItem("Key", ": ", Config.keyStrokeProperty),
                 new LineBreak(),
                 new ActionItem("[ Exit ]", true)
             ));
-            
             menu.start();
         }
+        catch (Throwable e) {
+            System.out.println("A Throwable got caught in MenuManager!");
+            System.out.println(e.getLocalizedMessage() + " : " + Arrays.toString(e.getStackTrace()));
+        }
+        finally {
+            System.exit(0);
+        }
     }
 
-    private static void startGame(Config config, TerminalBackend terminal) {
+    private static void inputTest(TerminalBackend terminal) {
         MenuManager menu = new MenuManager(terminal, List.of(
-                new StaticText("Credentials"),
-                new LineBreak(),
-                new StaticText("Name: " + config.username.get()),
-                new StaticText("Age: " + config.age.get()),
-                new StaticText("Allowance: " + config.allowance.get()),
-                new StaticText("Admin: " + config.admin.get()),
-                new LineBreak(),
-                new ActionItem("[ Return ]", true)
+            new LineBreak(),
+            new StaticText("<< Input Test >>"),
+            new LineBreak(),
+            new InputItem<>("Name", ": ", Config.name),
+            new InputItem<>("Age", Config.age),
+            new InputItem<>("Allowance", " >> ", Config.allowance , "Philippine Pesos"),
+            new InputItem<>("NaN", Config.nan, "nan"),
+            new LineBreak(),
+            new ActionItem("[ Reset Fields ]", Config::resetFields),
+            new ToggleItem("Value Switch", Config.switchFields),
+            new LineBreak(),
+            new ActionItem("[ Return ]", true)
         ));
-
-        int age = config.age.get();
-        int newAge = 34;
-
-        if (config.age.isValid(newAge)) {
-            config.age.set(newAge);
-        }
-
         menu.start();
     }
-}
 
-class Config {
-    Property<String> username = Property.of("")
-            .require(name -> !name.isEmpty(), "Name cannot be blank")
-            .require(name -> !name.equalsIgnoreCase("terrance"), "Terrance is not valid?!?!")
-            .require(name -> !name.equalsIgnoreCase("drew"))
-            .parser(String::toString).build();
+    private static class Config {
+        // ------ Default Usage ------
+        // Custom Error Messages
+        public static Property<String> name = Property.of("")
+            .require(n -> !n.isEmpty(), "Name cannot be blank")
+            .require(n -> !n.equalsIgnoreCase("terrance"), "Name cannot be Terrance")
+            .require(n -> !n.equalsIgnoreCase("drew"), "Name cannot be Drew")
+            .parser(String::toString)
+            .build();
 
-    private Integer ageInt = 0;
-    Property<Integer> age = Property.of(0)
-            .require(age -> age >= 18)
-            .require(age -> age < 50, "You are too old!")
-            .setter(value -> ageInt = value )
-            .getter( () -> ageInt )
-            .parser(Integer::parseInt).build();
+        // Default Error Messages
+        public static Property<Integer> age = Property.of(0)
+            .require(a -> a >= 18)
+            .require(a -> a <= 50)
+            .parser(Integer::parseInt)
+            .build();
 
-    Property<Double> allowance = Property.of(0D)
-            .parser(Double::parseDouble).build();
+        // `Require` not needed
+        public static Property<Double> allowance = Property.of(0D)
+            .parser(Double::parseDouble)
+            .build();
 
-    Property<Boolean> admin = Property.of(false).build();
+        public static Property<String> nan = Property.of("")
+            .parser(String::toString)
+            .build();
 
-    Property<KeyStroke> dropBlock = Property.of(new KeyStroke(KeyType.ARROW_DOWN)).build();
+        // --- Custom setters and getters ---
+        private static boolean fieldsSwitched;
+
+        private static void switchFields(boolean bool) {
+            fieldsSwitched = bool;
+
+            if (fieldsSwitched) {
+                switch1();
+                return;
+            }
+
+            switch2();
+        }
+
+        private static void switch1() {
+            name.set("Terrance");
+            age.set(50);
+            allowance.set(-25D);
+            nan.set("LMAO");
+        }
+
+        private static void switch2() {
+            name.set("Andrew");
+            age.set(18);
+            allowance.set(5000D);
+            nan.set("NaN");
+        }
+
+        private static boolean isFieldsSwitched() {
+            return fieldsSwitched;
+        }
+
+        // `Parser` not needed
+        public static Property<Boolean> switchFields = Property.of(false)
+            .setter(Config::switchFields)
+            .getter(Config::isFieldsSwitched)
+            .build();
+        // ------
+
+        // First-class KeyStroke support
+        public static Property<KeyStroke> keyStrokeProperty = Property.of(new KeyStroke(KeyType.UNKNOWN))
+            .build();
+
+        private static void resetFields() {
+            name.set("");
+            age.set(0);
+            allowance.set(0D);
+            nan.set("");
+        }
+    }
 }
