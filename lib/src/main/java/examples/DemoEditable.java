@@ -38,7 +38,7 @@ public class DemoEditable {
                 new DynamicText<>("Col: ", terminal::getXSize),
                 new DynamicText<>("Row: ", terminal::getYSize),
                 new LineBreak(),
-                new ActionItem("[ Input Test ]", () -> DemoEditable.inputTest(terminal)),
+                new ActionItem("[ Input Test ]", () -> inputTest(terminal)),
                 new LineBreak(),
                 new KeyInputItem("Key", ": ", Config.keyStrokeProperty),
                 new LineBreak(),
