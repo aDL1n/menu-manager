@@ -73,9 +73,6 @@ public class MenuManager implements InputHandler, ErrorListener {
                 now = System.nanoTime();
             }
         }
-
-        terminal.clearScreen();
-        terminal.flush();
     }
 
     private void update(KeyStroke keyStroke) {
