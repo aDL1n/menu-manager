@@ -73,8 +73,8 @@ public class InputItem<T> extends Item implements InputHandler, ErrorObservable 
             }
             case ENTER -> {
                 try {
-                    if (property.isValid(value)) {
-                        property.set(value);
+                    if (property.isValidFromString(value)) {
+                        property.setFromString(value);
                         isFinished = true;
                         break;
                     }
