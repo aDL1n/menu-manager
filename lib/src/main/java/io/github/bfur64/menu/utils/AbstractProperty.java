@@ -7,9 +7,9 @@ import org.jspecify.annotations.Nullable;
 public interface AbstractProperty<T> {
     T get();
     void set(T value);
-    void set(String value);
+    void setFromString(String value);
     boolean isValid(T value);
-    boolean isValid(String value);
+    boolean isValidFromString(String value);
     @Nullable String getLatestError();
     @Nullable T parse(String value);
 }
