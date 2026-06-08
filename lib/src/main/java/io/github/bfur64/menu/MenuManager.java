@@ -141,6 +141,8 @@ public class MenuManager implements InputHandler, ErrorListener {
     }
 
     private void moveCursor(int cursorMovement) {
+        if (menuList.isEmpty()) return;
+
         int x = cursor.getPosition().x();
         int y = cursor.getPosition().y();
 
@@ -159,6 +161,8 @@ public class MenuManager implements InputHandler, ErrorListener {
     }
 
     private void selectItem(Position cursorPosition) {
+        if (menuList.isEmpty()) return;
+        
         Item menuItem = menuList.get(cursorPosition.y());
 
         menuItem.selectItem();
