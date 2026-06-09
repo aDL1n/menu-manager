@@ -13,10 +13,12 @@ import org.jspecify.annotations.NullMarked;
 import org.jspecify.annotations.Nullable;
 
 import java.util.List;
+import java.util.concurrent.locks.LockSupport;
 
 @NullMarked
 public class MenuManager implements InputHandler, ErrorListener {
     private static final KeyStroke UNKNOWN_KEY = new KeyStroke(KeyType.UNKNOWN);
+    private static final long NS_PER_FRAME = 1_000_000_000L / 60;
 
     private final TerminalBackend terminal;
     private final MenuCursor cursor;
@@ -46,18 +48,31 @@ public class MenuManager implements InputHandler, ErrorListener {
     }
 
     public void start() {
-        update(UNKNOWN_KEY);
-
         while (isRunning) {
-            update(terminal.readInput());
+            long frameStart = System.nanoTime();
+
+            // START
+            KeyStroke keyStroke = terminal.pollInput();
+
+            if (keyStroke == null) {
+                keyStroke = UNKNOWN_KEY;
+            }
+
+            update(keyStroke);
 
             if (itemSelected != null && itemSelected.shouldExit()) {
                 exit();
             }
-        }
+            // END
 
-        terminal.clearScreen();
-        terminal.flush();
+            long deadline = frameStart + NS_PER_FRAME;
+            long now = System.nanoTime();
+
+            while (now < deadline) {
+                LockSupport.parkNanos(deadline - now);
+                now = System.nanoTime();
+            }
+        }
     }
 
     private void update(KeyStroke keyStroke) {
@@ -126,6 +141,8 @@ public class MenuManager implements InputHandler, ErrorListener {
     }
 
     private void moveCursor(int cursorMovement) {
+        if (menuList.isEmpty()) return;
+
         int x = cursor.getPosition().x();
         int y = cursor.getPosition().y();
 
@@ -144,6 +161,8 @@ public class MenuManager implements InputHandler, ErrorListener {
     }
 
     private void selectItem(Position cursorPosition) {
+        if (menuList.isEmpty()) return;
+        
         Item menuItem = menuList.get(cursorPosition.y());
 
         menuItem.selectItem();

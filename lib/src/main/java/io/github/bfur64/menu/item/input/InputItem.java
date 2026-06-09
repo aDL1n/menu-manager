@@ -19,7 +19,7 @@ public class InputItem<T> extends Item implements InputHandler, ErrorObservable 
     protected @Nullable ErrorListener errorListener;
 
     protected String value;
-    protected boolean isFinished;
+    protected boolean isFinished = true;
 
     public InputItem(String name, Property<T> property) {
         this(name, " = ", property);
@@ -43,6 +43,10 @@ public class InputItem<T> extends Item implements InputHandler, ErrorObservable 
 
     @Override
     public String getDisplayName() {
+        if (isFinished) {
+            value = property.get().toString();
+        }
+
         return name + separator + value + " " + suffix;
     }
 
@@ -69,8 +73,8 @@ public class InputItem<T> extends Item implements InputHandler, ErrorObservable 
             }
             case ENTER -> {
                 try {
-                    if (property.isValid(value)) {
-                        property.set(value);
+                    if (property.isValidFromString(value)) {
+                        property.setFromString(value);
                         isFinished = true;
                         break;
                     }

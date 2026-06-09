@@ -54,7 +54,7 @@ public class Property<T> implements AbstractProperty<T> {
     }
 
     @Override
-    public void set(String value) {
+    public void setFromString(String value) {
         T parsed = parse(value);
 
         if (parsed == null) {
@@ -78,7 +78,7 @@ public class Property<T> implements AbstractProperty<T> {
     }
 
     @Override
-    public boolean isValid(String value) {
+    public boolean isValidFromString(String value) {
         T parsed = parse(value);
 
         if (parsed == null) {

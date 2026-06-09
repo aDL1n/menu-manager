@@ -26,15 +26,7 @@ public class KeyInputItem extends InputItem<KeyStroke> {
 
     @Override
     public void handle(KeyStroke keyStroke) {
-        if (keyStroke.keyType() == KeyType.UNKNOWN) {
-            if (errorListener != null) {
-                errorListener.onError(new ErrorEvent("Unknown Key"));
-            }
-
-            value = property.get().toString();
-            isFinished = true;
-            return;
-        }
+        if (keyStroke.keyType() == KeyType.UNKNOWN) return;
 
         property.set(keyStroke);
         value = keyStroke.toString();
