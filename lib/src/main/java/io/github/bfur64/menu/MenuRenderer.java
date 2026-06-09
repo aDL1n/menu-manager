@@ -1,6 +1,7 @@
 package io.github.bfur64.menu;
 
 import io.github.bfur64.menu.item.Item;
+import io.github.bfur64.menu.item.SelectableItem;
 import io.github.bfur64.terminal.interfaces.TerminalBackend;
 import org.jspecify.annotations.NullMarked;
 import org.jspecify.annotations.Nullable;
@@ -72,7 +73,7 @@ public class MenuRenderer {
 
     private int countSelectableItems(List<Item> items) {
         return (int) items.stream()
-            .filter(Item::isSelectable)
+            .filter(SelectableItem.class::isInstance)
             .count();
     }
 

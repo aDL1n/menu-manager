@@ -15,7 +15,7 @@ public class DynamicText<T> extends Item {
     }
 
     public DynamicText(String name, String suffix, Supplier<T> supplier) {
-        super(name, false);
+        super(name);
         this.suffix = suffix;
         this.supplier = supplier;
     }

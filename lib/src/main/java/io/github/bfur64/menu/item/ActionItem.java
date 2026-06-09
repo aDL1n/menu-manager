@@ -3,11 +3,12 @@ package io.github.bfur64.menu.item;
 import org.jspecify.annotations.NullMarked;
 
 @NullMarked
-public class ActionItem extends Item {
+public class ActionItem extends SelectableItem {
     private final Runnable action;
 
     public ActionItem(String name, Runnable action) {
-        this(name, action, false);
+        super(name);
+        this.action = action;
     }
 
     public ActionItem(String name, boolean shouldExit) {
@@ -15,8 +16,9 @@ public class ActionItem extends Item {
     }
 
     public ActionItem(String name, Runnable action, boolean shouldExit) {
-        super(name, true, shouldExit);
+        super(name);
         this.action = action;
+        this.shouldExit = shouldExit;
     }
 
     @Override

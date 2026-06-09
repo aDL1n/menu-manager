@@ -8,6 +8,7 @@ import org.jspecify.annotations.NullMarked;
 
 @NullMarked
 public class KeyInputItem extends InputItem<KeyStroke> {
+
     public KeyInputItem(String name, Property<KeyStroke> property) {
         super(name, " = ", property);
     }

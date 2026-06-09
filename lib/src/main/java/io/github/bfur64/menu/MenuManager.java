@@ -2,6 +2,7 @@ package io.github.bfur64.menu;
 
 import io.github.bfur64.menu.input.InputHandler;
 import io.github.bfur64.menu.item.Item;
+import io.github.bfur64.menu.item.SelectableItem;
 import io.github.bfur64.menu.utils.ErrorEvent;
 import io.github.bfur64.menu.utils.ErrorListener;
 import io.github.bfur64.menu.utils.ErrorObservable;
@@ -60,7 +61,10 @@ public class MenuManager implements InputHandler, ErrorListener {
 
             update(keyStroke);
 
-            if (itemSelected != null && itemSelected.shouldExit()) {
+            if (itemSelected != null &&
+                itemSelected instanceof SelectableItem selectableItem &&
+                selectableItem.shouldExit()
+            ) {
                 exit();
             }
             // END
@@ -128,16 +132,12 @@ public class MenuManager implements InputHandler, ErrorListener {
         final int cursorX = 1;
 
         for (int itemIndex = 0; itemIndex < menuList.size(); itemIndex++) {
-            if (isItemSelectable(itemIndex)) {
+            if (menuList.get(itemIndex) instanceof SelectableItem) {
                 return Position.of(cursorX, itemIndex);
             }
         }
 
         return Position.of(cursorX, 0);
-    }
-
-    private boolean isItemSelectable(int itemIndex) {
-        return menuList.get(itemIndex).isSelectable();
     }
 
     private void moveCursor(int cursorMovement) {
@@ -155,18 +155,16 @@ public class MenuManager implements InputHandler, ErrorListener {
 
             if (y == cursor.getPosition().y()) return;
         }
-        while (!menuList.get(y).isSelectable());
+        while (!(menuList.get(y) instanceof SelectableItem));
 
         cursor.setPosition(Position.of(x, y));
     }
 
     private void selectItem(Position cursorPosition) {
-        if (menuList.isEmpty()) return;
-        
-        Item menuItem = menuList.get(cursorPosition.y());
+        if (!(menuList.get(cursorPosition.y()) instanceof SelectableItem selectableItem)) return;
 
-        menuItem.selectItem();
-        itemSelected = menuItem;
+        selectableItem.selectItem();
+        itemSelected = selectableItem;
     }
 
     public void exit() {
