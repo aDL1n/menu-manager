@@ -1,4 +1,4 @@
-package io.github.bfur64.menu.item;
+package io.github.bfur64.menu.item.display;
 
 import org.jspecify.annotations.NullMarked;
 

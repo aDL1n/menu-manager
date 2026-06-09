@@ -12,7 +12,7 @@
 
 <div align="center">
   <h2>Demo</h2>
-  <img width="640" height="524" alt="" src="https://github.com/user-attachments/assets/f12e00a0-4743-4df6-a0f2-9ef731c8cbe1" />
+  <img width="640" height="476" alt="ezgif-76173d48fdbe0ee6" src="https://github.com/user-attachments/assets/6e174d55-eaf4-4a37-86e0-3ef775cf8496" />
 </div>
 
 ## Quick Start
@@ -180,7 +180,7 @@ class GameConfig {
 
 // 2. Build your menu
 public static void main(String[] args) throws IOException {
-    try (Terminal terminal = Terminal.auto()) {
+    try (TerminalBackend terminal = BufferedTerminal.auto()) {
         terminal.start();
 
         MenuManager menu = new MenuManager(terminal, List.of(
@@ -200,7 +200,7 @@ public static void main(String[] args) throws IOException {
 }
 
 // 3. Use the validated config in your game
-private static void startGame(Terminal terminal) {
+private static void startGame(TerminalBackend terminal) {
     int difficulty = GameConfig.difficulty.get();  // Guaranteed valid
     KeyStroke jump = GameConfig.jumpKey.get();
     
@@ -341,11 +341,11 @@ If parsing fails (e.g., user types "abc" for an `Integer` property), the default
 
 - **Single-threaded rendering**: The menu blocks the main thread during `run()`
 - **No mouse support**: Keyboard navigation only (arrow keys, Enter, Escape)
-- **Full screen redraws**: Every input triggers `clearScreen()` (works for small menus)
 - **No scrolling**: All menu items must fit on screen simultaneously
 - **Static item lists**: Menu structure is immutable after construction (use `DynamicText` for updating values)
 - **Terminal dependent**: Requires ANSI color support and proper keystroke detection
 - **No nested validation**: Property validators are single-level predicates
+- **Blocking Refresh**: Needs an update from `MenuManager` (or `MenuRenderer`) to re-render the new state
 
 ## Requirements
 

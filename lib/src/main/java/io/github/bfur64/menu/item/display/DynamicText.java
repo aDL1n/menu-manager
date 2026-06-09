@@ -1,5 +1,6 @@
-package io.github.bfur64.menu.item;
+package io.github.bfur64.menu.item.display;
 
+import io.github.bfur64.menu.item.Item;
 import org.jspecify.annotations.NullMarked;
 
 import java.util.function.Supplier;
