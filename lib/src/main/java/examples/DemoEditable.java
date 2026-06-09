@@ -42,7 +42,7 @@ public class DemoEditable {
                 new LineBreak(),
                 new KeyInputItem("Key", ": ", Config.keyStrokeProperty),
                 new LineBreak(),
-                new ActionItem("[ Exit ]", context -> context.menu().exit())
+                new ActionItem("[ Exit ]", true)
             ));
             menu.start();
         }
