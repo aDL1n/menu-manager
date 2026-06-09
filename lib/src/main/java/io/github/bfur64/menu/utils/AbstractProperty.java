@@ -5,7 +5,6 @@ import org.jspecify.annotations.Nullable;
 
 @NullMarked
 public interface AbstractProperty<T> {
-
     T get();
     void set(T value);
     void setFromString(String value);

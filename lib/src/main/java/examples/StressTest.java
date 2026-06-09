@@ -19,10 +19,10 @@ public class StressTest {
             StressTest test = new StressTest(terminal);
 
             MenuManager menu = new MenuManager(terminal, List.of(
-                new ActionItem("[ Test 1 ]", test::test1),
-                new ActionItem("[ Test 2 ]", test::test2),
-                new ActionItem("[ Test 3 ]", test::test3),
-                new ActionItem("[ Test 4 ]", test::test4)
+                    new ActionItem("[ Test 1 ]", test::test1),
+                    new ActionItem("[ Test 2 ]", test::test2),
+                    new ActionItem("[ Test 3 ]", test::test3),
+                    new ActionItem("[ Test 4 ]", test::test4)
             ));
             menu.start();
         }
