@@ -12,6 +12,8 @@ import java.util.Arrays;
 class Config {
     public static final String VERSION;
 
+    private Config() {}
+
     static {
         String version;
 

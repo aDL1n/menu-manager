@@ -2,6 +2,8 @@ package io.github.bfur64.menu.item.input;
 
 import io.github.bfur64.menu.input.InputHandler;
 import io.github.bfur64.menu.item.Item;
+import io.github.bfur64.menu.item.Selectable;
+import io.github.bfur64.menu.item.SelectableItem;
 import io.github.bfur64.menu.utils.ErrorEvent;
 import io.github.bfur64.menu.Property;
 import io.github.bfur64.menu.utils.ErrorListener;
@@ -12,7 +14,7 @@ import org.jspecify.annotations.NullMarked;
 import org.jspecify.annotations.Nullable;
 
 @NullMarked
-public class InputItem<T> extends Item implements InputHandler, ErrorObservable {
+public class InputItem<T> extends SelectableItem implements InputHandler, ErrorObservable {
     private final String separator;
     protected final Property<T> property;
     private final String suffix;
@@ -34,7 +36,7 @@ public class InputItem<T> extends Item implements InputHandler, ErrorObservable 
     }
 
     public InputItem(String name, String separator, Property<T> property, String suffix) {
-        super(name, true);
+        super(name);
         this.separator = separator;
         this.property = property;
         this.suffix = suffix;

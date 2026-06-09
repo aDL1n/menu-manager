@@ -48,7 +48,7 @@ public class StressTest {
                 new StaticText("Text Only"),
                 new StaticText("Text Only"),
                 new StaticText("Text Only"),
-                new ActionItem("Action!", () -> {}),
+                new ActionItem("Action!", false),
                 new StaticText("Text Only"),
                 new StaticText("Text Only"),
                 new StaticText("Text Only"),
@@ -67,7 +67,7 @@ public class StressTest {
 
     private void test3() {
         MenuManager menu = new MenuManager(terminal, List.of(
-                new ActionItem("Action!", () -> {}),
+                new ActionItem("Action!", false),
                 new StaticText("Text Only"),
                 new StaticText("Text Only"),
                 new StaticText("Text Only"),
@@ -83,14 +83,14 @@ public class StressTest {
                 new StaticText("Text Only"),
                 new StaticText("Text Only"),
                 new StaticText("Text Only"),
-                new ActionItem("Action!", () -> {})
+                new ActionItem("Action!", false)
         ));
         menu.start();
     }
 
     private void test4() {
         MenuManager menu = new MenuManager(terminal, List.of(
-                new ActionItem("Action!", () -> {}),
+                new ActionItem("Action!", false),
                 new StaticText("Text Only"),
                 new StaticText("Text Only"),
                 new StaticText("Text Only"),
@@ -98,7 +98,7 @@ public class StressTest {
                 new StaticText("Text Only"),
                 new StaticText("Text Only"),
                 new StaticText("Text Only"),
-                new ActionItem("Action!", () -> {}),
+                new ActionItem("Action!", false),
                 new StaticText("Text Only"),
                 new StaticText("Text Only"),
                 new StaticText("Text Only"),
@@ -107,7 +107,7 @@ public class StressTest {
                 new StaticText("Text Only"),
                 new StaticText("Text Only"),
                 new StaticText("Text Only"),
-                new ActionItem("Action!", () -> {})
+                new ActionItem("Action!", false)
         ));
         menu.start();
     }
