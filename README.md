@@ -294,30 +294,30 @@ Property.of(initialValue)
 
 Menu Manager uses a simple render loop that:
 
-1. Renders all items to the terminal buffer
-2. Draws the cursor (`>`) at the current position
-3. Blocks waiting for user input
-4. Processes the keystroke (arrow keys, Enter, Escape)
-5. Loops until an exit condition
+1. Gets user input (if any)
+2. Calls `MenuRenderer` to print state changes
+3. Loops (with a cap of 60fps) using `LockSupport` until an exit condition
 
 ```java
 // Simplified internal flow
 while (isRunning) {
-    terminal.clearScreen();
-    
-    // Render all items
-    for (Item item : menuList) {
-        terminal.putString(x, y, item.getDisplayName());
+    // Checks for input
+    KeyStroke keyStroke = terminal.pollInput();
+
+    if (keyStroke == null) {
+        keyStroke = UNKNOWN_KEY;
     }
-    
-    // Draw cursor
-    terminal.putString(0, cursorPos, ">");
-    
-    terminal.flush();
-    
-    // Block and process input
-    KeyStroke key = terminal.readInput();
-    handleInput(key);
+
+    // Delegates updating to `MenuRenderer` via a method call within `MenuManager`
+    update(keyStroke);
+
+    // Checks if `MenuManager` should exit based on a boolean method of a `SelectableItem`
+    if (itemSelected != null &&
+        itemSelected instanceof SelectableItem selectableItem &&
+        selectableItem.shouldExit()
+    ) {
+        exit();
+    }
 }
 ```
 
