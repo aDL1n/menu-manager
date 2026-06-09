@@ -60,11 +60,11 @@ dependencies {
 
 ```java
 List<Item> items = List.of(
-        new StaticText("== Settings =="),
-        new EditableItem<>("Gravity", gravity),
-        new ToggleItem("Fullscreen", fullscreen),
-        new ActionItem("[ Start Game ]", this::startGame),
-        new ActionItem("[ Exit ]", true)
+    new StaticText("== Settings =="),
+    new EditableItem<>("Gravity", gravity),
+    new ToggleItem("Fullscreen", fullscreen),
+    new ActionItem("[ Start Game ]", this::startGame),
+    new ActionItem("[ Exit ]", true)
 );
 
 MenuManager menu = new MenuManager(terminal, items);
@@ -83,10 +83,10 @@ A property can define:
 
 ```java
 public static Property<Integer> gravity = Property.of(500)
-        .require(value -> value >= 50, "Gravity must be at least 50 ms")
-        .require(value -> value <= 2000, "Gravity must be less than 2000 ms")
-        .parser(Integer::parseInt)
-        .build();
+    .require(value -> value >= 50, "Gravity must be at least 50 ms")
+    .require(value -> value <= 2000, "Gravity must be less than 2000 ms")
+    .parser(Integer::parseInt)
+    .build();
 ```
 
 Editable menu items (e.g. `InputItem`, `KeyInputItem`, `ToggleItem`) automatically use these validators and error messages.
@@ -109,23 +109,21 @@ Config config = new Config();
 
 Usage
 ```java
-Property<Integer> fps =
-        Property.<Integer>of(60)
-                .getter(config::getFps)
-                .setter(config::setFps)
-                .parser(Integer::parseInt)
-                .build();
+Property<Integer> fps = Property.of(60)
+    .getter(config::getFps)
+    .setter(config::setFps)
+    .parser(Integer::parseInt)
+    .build();
 ```
 
 or direct lambda call
 
 ```java
 Integer fpsField = 50;
-Property<Integer> fps =
-        Property.<Integer>of(60)
-                .getter(() -> fpsField )
-                .setter(fps -> {fpsField = fps; })
-                .build();
+Property<Integer> fps = Property.of(60)
+    .getter(() -> fpsField )
+    .setter(fps -> {fpsField = fps; })
+    .build();
 ```
 
 ### Key Bindings
@@ -194,7 +192,7 @@ public static void main(String[] args) throws IOException {
             new ActionItem("[ Start Game ]", () -> startGame(terminal)),
             new ActionItem("[ Exit ]", true)
         ));
-        
+
         menu.start();
     }
 }
@@ -203,7 +201,7 @@ public static void main(String[] args) throws IOException {
 private static void startGame(TerminalBackend terminal) {
     int difficulty = GameConfig.difficulty.get();  // Guaranteed valid
     KeyStroke jump = GameConfig.jumpKey.get();
-    
+
     // Game loop
     while (true) {
         KeyStroke input = terminal.readInput();
@@ -287,9 +285,9 @@ Property.of(initialValue)
 **Key Methods:**
 - `T get()` - Retrieve current value
 - `void set(T value)` - Update value (throws if invalid)
-- `void set(String stringValue)` - Parse and set (requires `.parser()`)
+- `void setFromString(String stringValue)` - Parse and set (requires `.parser()`)
 - `boolean isValid(T value)` - Check without setting
-- `boolean isValid(String stringValue)` - Parse and check
+- `boolean isValidFromString(String stringValue)` - Parse and check
 - `String getLatestError()` - Get last validation failure message
 
 ## How It Works
@@ -345,7 +343,6 @@ If parsing fails (e.g., user types "abc" for an `Integer` property), the default
 - **Static item lists**: Menu structure is immutable after construction (use `DynamicText` for updating values)
 - **Terminal dependent**: Requires ANSI color support and proper keystroke detection
 - **No nested validation**: Property validators are single-level predicates
-- **Blocking Refresh**: Needs an update from `MenuManager` (or `MenuRenderer`) to re-render the new state
 
 ## Requirements
 
